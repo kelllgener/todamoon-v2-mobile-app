@@ -1,0 +1,203 @@
+<resources>
+    <string name="app_name">todamoon</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--   ======== UNIVERSAL FORMS ========   -->
+    <string name="firstname">Firstname</string>
+    <string name="lastname">Lastname</string>
+    <string name="middlename">Middlename</string>
+    <string name="select_barangay">Select Barangay</string>
+    <string name="plate_number">Plate Number</string>
+    <string name="tricycle_number">Tricycle Number</string>
+    <string name="email">Email</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+
+    <string name="step1button">Step1Button</string>
+    <string name="step2button">step2Button</string>
+    <string name="step3button">step3Button</string>
+    <string name="previousButton">previousButton</string>
+    <string name="nextButton">nextButton</string>
+
+    <!--    FRONT PAGE-->
+    <string name="front_page_passenger_login">Login as Passenger</string>
+    <string name="front_page_driver_login">Login as Driver</string>
+
+    <!--   ======== PASSENGER ========   -->
+
+    <!--    PASSENGER LOGIN-->
+    <string name="passenger_login_title">Passenger Login</string>
+    <string name="passenger_login_google">Continue with Google</string>
+    <string name="passenger_login_forgot_pass">Forgot password?</string>
+    <string name="passenger_login_login_button">Login</string>
+    <string name="passenger_login_create_acc">
+            Don\'t have an Account? <font color="#000080"><b>Sign Up</b></font>
+    </string>
+
+    <!--    PASSENGER REGISTER-->
+    <string name="passenger_register_firstname">Firstname</string>
+    <string name="passenger_register_button">Register</string>
+    <string name="passenger_register_go_to_login">
+            Already have an Account? <font color="#000080"><b>Login</b></font>
+    </string>
+
+
+    <!--   ======== DRIVER ========   -->
+
+    <!--    DRIVER LOGIN-->
+    <string name="driver_login_title">Driver Login</string>
+    <string name="driver_login_email">Email</string>
+    <string name="driver_login_password">Password</string>
+    <string name="driver_login_forgot_pass">Forgot password?</string>
+    <string name="driver_login_login_button">Login</string>
+    <string name="driver_login_create_acc">
+            Don\'t have an Account? <font color="#000080"><b>Sign Up</b></font>
+    </string>
+
+    <!--    DRIVER REGISTER-->
+    <string name="driver_register_title">REGISTER DRIVER</string>
+    <string name="driver_register_icon_personal">personal</string>
+    <string name="driver_register_icon_tricycle">Tricycle</string>
+    <string name="driver_register_icon_account">Account</string>
+    <string name="driver_register_first_form_sub_title">Personal Information</string>
+    <string name="driver_register_second_form_sub_title">Tricycle Information</string>
+    <string name="driver_register_third_form_sub_title">Account Details</string>
+
+    <!--    DRIVER HOME-->
+    <string name="home_tooltip">Home</string>
+    <string name="my_account">My Account</string>
+    <string name="balance">Balance</string>
+    <string name="queue_button">Queue</string>
+    <string name="billing_button">Billing</string>
+    <string name="transaction_history">Transaction History</string>
+    <string name="transaction_history_sub_Text">A list of Queueing Transactions</string>
+    <string name="queue_entry">Queue Entry</string>
+
+    <!--    DRIVER GENERATE QR CODE-->
+    <string name="qr_code_fragment_title">Qr Code</string>
+    <string name="qr_code_fragment_app_title">TODA Moon</string>
+    <string name="qr_code_fragment_set_of_instructions">Scan QR Code to Join the Queueing</string>
+    <string name="qr_code_fragment_view_button">View QR Code Details</string>
+    <string name="qr_code_fragment_download_button">Add to Gallery</string>
+
+    <!--    QR CODE DETAILS - BOTTOM SHEET LAYOUT-->
+    <string name="qr_code_details_title">Driver\'s Information</string>
+    <string name="qr_code_details_uid">UID</string>
+    <string name="qr_code_details_name">Name</string>
+    <string name="qr_code_details_tricycle_number">Tricycle Number</string>
+
+    <!--    CATEGORY - TRICYCLE QUEUE-->
+    <string name="notification_fragment_title">Notifications</string>
+
+    <!--    CATEGORY - TRICYCLE QUEUE-->
+    <string name="tricycle_queue_fragment_title">Tricycle Queue</string>
+    <string name="tricycle_queue_fragment_sub_title">Barangay Lawa Terminal</string>
+
+    <!--   LIST OF QUEUE -->
+    <string name="list_of_queue_title">Queueing List</string>
+    <string name="list_of_queue_no_available_tricycle_indicator">No Available Tricycle at the Moment.</string>
+
+    <!--   SETTINGS-->
+    <string name="settings_fragment_title">Settings</string>
+    <string name="settings_fragment_account">Account</string>
+    <string name="settings_fragment_notification">Notification</string>
+    <string name="settings_fragment_about_app">About Application</string>
+    <string name="settings_fragment_help">Help</string>
+    <string name="settings_fragment_logout">Logout</string>
+
+    <!--    PROGRESS BAR-->
+    <string name="please_wait">Please wait...</string>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!--    TERMS AND CONDITION-->
+    <string name="register">Register</string>
+    <string name="cancel">Cancel</string>
+    <string name="terms_and_condition_title">Terms and Condition</string>
+    <string name="terms_and_condition_checkbox">I agree to the Terms and Condition</string>
+    <string name="terms_and_condition_context">
+<p>These terms and conditions outline the rules and regulations for the use of TODAMOON mobile application.
+            By registering an account on TODAMOON, you accept these terms and conditions in full.
+            If you disagree with any part of these terms and conditions,
+            please do not proceed with the registration process.
+        </p>
+
+        <b>Account Registration.</b>
+        <p>
+            By registering an account on [Your App Name], you agree to provide accurate and up-to-date information, including but not limited to:
+First Name, Middle Name (optional), Last Name, Age, Address, Barangay, Plate Number (for tricycle operators), Tricycle Number, Email Address, Phone Number, Password.
+You are solely responsible for maintaining the confidentiality of your account and password. You agree to accept responsibility for all activities that occur under your account.
+You must notify us immediately of any unauthorized use of your account or any other breach of security.
+
+        </p>
+
+        <b>Data Collection and Use.</b>
+        <p>
+            We collect the personal information you provide during the registration process to create and maintain your account, as well as to provide you with the services offered by TODAMOON.
+We may use your personal information to communicate with you regarding your account, updates to our services, promotional offers, and other relevant information.
+We will not share your personal information with third parties without your consent, except as required by law or as necessary to provide the services requested by you.
+
+        </p>
+
+        <b>Data Security.</b>
+        <p>
+            We take reasonable measures to protect the security and confidentiality of your personal information. However, we cannot guarantee that unauthorized access, hacking, data loss, or other breaches will never occur.
+You are responsible for keeping your account information secure, including choosing a strong password and not sharing your password with others.
+
+        </p>
+
+        <b>Acceptable Use.</b>
+        <p>
+            You agree to use TODAMOON in compliance with all applicable laws and regulations.
+You agree not to use TODAMOON for any unlawful purpose or in any way that could harm, disable, overburden, or impair our services.
+You agree not to attempt to gain unauthorized access to any part of TODAMOON, its servers, or any other systems or networks connected to TODAMOON.
+
+        </p>
+
+        <b>Changes to Terms and Conditions.</b>
+        <p>
+            We reserve the right to modify or update these terms and conditions at any time without prior notice. The updated terms and conditions will be posted on TODAMOON, and your continued use of the app after any such changes constitutes your acceptance of the new terms and conditions.
+        </p>
+
+        <b>Contact Us.</b>
+        <p>If you have any questions or concerns about these terms and conditions, please contact us at [Your Contact Information].</p>
+    </string>
+
+</resources>

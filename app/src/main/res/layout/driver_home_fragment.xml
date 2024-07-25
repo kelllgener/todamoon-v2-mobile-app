@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".driver.fragments.DriverHomeFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Toolbar -->
+        <LinearLayout
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+
+                android:elevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/my_account"
+                            android:textColor="@color/primary_text"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/txtDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="05-24-2003"
+                            android:textColor="@color/secondary_text"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="0dp" />
+
+                </LinearLayout>
+            </androidx.appcompat.widget.Toolbar>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/primary_dark"
+                />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/balanceCard"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="@drawable/balance_background"
+            android:layout_below="@id/toolbar"
+            android:layout_marginTop="16dp"
+            android:padding="20dp"
+            android:layout_margin="10dp">
+
+            <TextView
+                android:id="@+id/cardBalanceTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/balance"
+                android:textColor="@color/light_gray"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/accountBalance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.00"
+                android:textColor="@color/white"
+                android:textSize="32sp"
+                android:textStyle="bold"
+                android:layout_below="@id/cardBalanceTitle"
+                android:layout_marginTop="8dp" />
+
+            <!--            <TextView-->
+            <!--                android:id="@+id/cardNumber"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:text="**** 0149"-->
+            <!--                android:textColor="@color/white"-->
+            <!--                android:textSize="14sp"-->
+            <!--                android:layout_below="@id/accountBalance"-->
+            <!--                android:layout_marginTop="16dp" />-->
+
+            <!--            <TextView-->
+            <!--                android:id="@+id/cardExpiryDate"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:text="05/25"-->
+            <!--                android:textColor="@color/white"-->
+            <!--                android:textSize="14sp"-->
+            <!--                android:layout_alignParentEnd="true"-->
+            <!--                android:layout_alignParentBottom="true"-->
+            <!--                android:layout_marginEnd="16dp"-->
+            <!--                android:layout_marginBottom="16dp" />-->
+
+            <ImageView
+                android:id="@+id/cardIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_qr_code"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                android:contentDescription="Card Icon"
+                app:tint="@color/white" />
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:id="@+id/transacButtons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/balanceCard"
+            android:layout_marginTop="10dp"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/QueueEntryButton"
+                style="@style/googleButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="2dp"
+                android:text="@string/queue_button"
+                android:textColor="#000000" />
+
+            <Button
+                android:id="@+id/billingButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/billing_button"
+                style="@style/googleButton"
+                android:textColor="#000000"
+                android:layout_marginLeft="2dp"
+                />
+
+        </LinearLayout>
+
+        <!-- Transaction History -->
+
+        <!-- Transaction History with NestedScrollView -->
+
+        <RelativeLayout
+            android:id="@+id/transactionHistoryContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/transacButtons"
+            android:background="@color/primary_light"
+            android:padding="16dp"
+            android:layout_margin="8dp">
+
+            <TextView
+                android:id="@+id/transactionHistoryTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/transaction_history"
+                android:textColor="@color/primary_text"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/transaction_history_sub_Text"
+                android:textColor="@color/secondary_text"
+                android:textSize="14sp"
+                android:layout_below="@id/transactionHistoryTitle"
+                android:layout_marginTop="8dp" />
+
+        </RelativeLayout>
+
+        <ScrollView
+            android:id="@+id/transaction_history_scrollview"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_weight="1"
+            android:layout_below="@id/transactionHistoryContainer"
+            android:fillViewport="true"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <!-- Add your ListView or RecyclerView here -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/transaction_history_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:dividerHeight="1dp" />
+
+            </LinearLayout>
+        </ScrollView>
+
+
+
+
+
+
+    </RelativeLayout>
+
+</FrameLayout>

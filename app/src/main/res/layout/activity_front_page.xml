@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient"
+    tools:context=".FrontPage">
+
+
+    <ImageView
+        android:id="@+id/imgLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="400dp"
+        android:src="@drawable/logo"
+        android:layout_marginTop="100dp"
+        />
+
+    <Button
+        android:id="@+id/btnGoToPassLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backgroundTint="@null"
+        android:text="@string/front_page_passenger_login"
+        android:textColor="@color/white"
+        android:background="@drawable/button_maroon"
+        android:layout_below="@+id/imgLogo"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        />
+
+    <Button
+        android:id="@+id/btnGoToDriverLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backgroundTint="@null"
+        android:text="@string/front_page_driver_login"
+        android:textColor="@color/white"
+        android:background="@drawable/button_orange"
+        android:layout_below="@id/btnGoToPassLogin"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+
+        />
+
+</RelativeLayout>

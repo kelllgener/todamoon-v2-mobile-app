@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".driver.ui.RegisterDriver">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="110dp"
+        android:src="@drawable/logo"
+        android:layout_marginTop="20dp"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/driver_register_title"
+        android:textSize="20sp"
+        android:textColor="@color/primary_dark"
+        android:layout_gravity="center"
+        android:textStyle="bold"
+        android:padding="15dp"
+        />
+
+    <LinearLayout
+        android:id="@+id/stepContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="10dp"
+        android:layout_marginBottom="10dp">
+
+        <View
+            android:layout_width="50dp"
+            android:layout_height="2dp"
+            android:background="@color/primary"
+            android:layout_marginStart="5dp" />
+
+        <!-- Step 1 -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/stepOneButton"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/circular_buttoon"
+                android:backgroundTint="@color/primary_dark"
+                android:contentDescription="@string/step2button"
+                android:src="@drawable/ic_person"
+                app:tint="@color/white"
+                tools:ignore="ImageContrastCheck" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/driver_register_icon_personal"
+                android:textSize="10sp"
+                android:textColor="@color/primary_dark"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/contactLeftView"
+            android:layout_width="50dp"
+            android:layout_height="2dp"
+            android:background="#B1ACAC" />
+
+        <!-- Step 2 -->
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/stepTwoButton"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/circular_buttoon"
+                android:contentDescription="@string/step1button"
+                android:src="@drawable/ic_tricycle"
+                app:tint="@color/white" />
+
+            <TextView
+                android:id="@+id/stepTwoTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/driver_register_icon_tricycle"
+                android:textSize="10sp"
+                android:textColor="@color/light_gray"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/contactRightView"
+            android:layout_width="50dp"
+            android:layout_height="2dp"
+            android:background="#B1ACAC" />
+
+        <!-- Step 3 -->
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/stepThreeButton"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:background="@drawable/circular_buttoon"
+                android:contentDescription="@string/step3button"
+                android:src="@drawable/ic_account"
+                app:tint="#FFFFFF"
+                tools:ignore="ImageContrastCheck" />
+
+            <TextView
+                android:id="@+id/stepThreeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/driver_register_icon_account"
+                android:textSize="10sp"
+                android:textColor="@color/light_gray"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/OtherRightView"
+            android:layout_width="50dp"
+            android:layout_height="2dp"
+            android:layout_marginEnd="5dp"
+            android:background="#B1ACAC" />
+
+    </LinearLayout>
+    <!-- Step Content -->
+    <FrameLayout
+        android:id="@+id/stepContentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_gravity="center">
+
+        <include layout="@layout/form_step_one" />
+
+    </FrameLayout>
+
+    <!-- Previous and Next Buttons -->
+    <LinearLayout
+        android:id="@+id/buttonContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/previousButton"
+            android:layout_width="80dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/button_style"
+            android:contentDescription="@string/previousButton"
+            android:src="@drawable/ic_back_arrow"
+            app:tint="@color/primary_dark" />
+
+        <ImageButton
+            android:id="@+id/nextButton"
+            android:layout_width="80dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="20dp"
+            android:background="@color/primary_dark"
+            android:contentDescription="@string/nextButton"
+            android:src="@drawable/ic_forward_arrow"
+            app:tint="@color/white"
+            android:visibility="visible"/>
+
+        <ImageButton
+            android:id="@+id/registerButton"
+            android:layout_width="80dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="20dp"
+            android:background="@color/primary_dark"
+            android:src="@drawable/ic_check"
+            app:tint="@color/white"
+            android:visibility="visible"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

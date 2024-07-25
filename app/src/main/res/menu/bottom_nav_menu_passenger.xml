@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:title="@string/home_tooltip"
+        android:tooltipText="@string/home_tooltip"
+        android:icon="@drawable/ic_home"
+        android:id="@+id/menu_passenger_home"
+        />
+    <item
+        android:title="@string/settings_fragment_title"
+        android:tooltipText="@string/settings_fragment_title"
+        android:icon="@drawable/ic_settings"
+        android:id="@+id/menu_passenger_settings"
+        />
+
+</menu>
