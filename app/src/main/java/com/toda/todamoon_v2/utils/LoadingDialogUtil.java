@@ -27,7 +27,15 @@ public class LoadingDialogUtil {
 
     public void hideLoadingDialog() {
         if (loadingDialog != null && loadingDialog.isShowing()) {
-            loadingDialog.dismiss();
+            try {
+                // Ensure the dialog is still attached to the window manager before dismissing
+                if (loadingDialog.getWindow() != null && loadingDialog.getWindow().getDecorView() != null) {
+                    loadingDialog.dismiss();
+                }
+            } catch (Exception e) {
+                // Handle the exception if needed (e.g., logging)
+                e.printStackTrace();
+            }
         }
     }
 }

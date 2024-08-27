@@ -67,49 +67,50 @@
     <string name="driver_register_third_form_sub_title">Account Details</string>
 
     <!--    DRIVER HOME-->
-    <string name="home_tooltip">Home</string>
-    <string name="my_account">My Account</string>
-    <string name="balance">Balance</string>
-    <string name="queue_button">Queue</string>
-    <string name="billing_button">Billing</string>
-    <string name="transaction_history">Transaction History</string>
-    <string name="transaction_history_sub_Text">A list of Queueing Transactions</string>
-    <string name="queue_entry">Queue Entry</string>
+    <string name="home_tooltip">Tahanan</string>
+    <string name="my_account">Aking  Account</string>
+    <string name="balance">Balanse</string>
+    <string name="queue_button">Pila</string>
+    <string name="billing_button">Pagbabayad</string>
+    <string name="transaction_history">Kasaysayan ng Transaksyon</string>
+    <string name="transaction_history_sub_Text">Listahan ng mga Pila na Transaksyon</string>
+    <string name="queue_entry">Pagpasok sa Pila</string>
 
     <!--    DRIVER GENERATE QR CODE-->
     <string name="qr_code_fragment_title">Qr Code</string>
     <string name="qr_code_fragment_app_title">TODA Moon</string>
-    <string name="qr_code_fragment_set_of_instructions">Scan QR Code to Join the Queueing</string>
-    <string name="qr_code_fragment_view_button">View QR Code Details</string>
-    <string name="qr_code_fragment_download_button">Add to Gallery</string>
+    <string name="qr_code_fragment_set_of_instructions">I-scan ang QR Code upang Sumali sa Pila</string>
+    <string name="qr_code_fragment_view_button">Tingnan ang Detalye ng QR Code</string>
+    <string name="qr_code_fragment_download_button">Idagdag sa Galeriya</string>
 
     <!--    QR CODE DETAILS - BOTTOM SHEET LAYOUT-->
-    <string name="qr_code_details_title">Driver\'s Information</string>
+    <string name="qr_code_details_title">Impormasyon ng Drayber</string>
     <string name="qr_code_details_uid">UID</string>
-    <string name="qr_code_details_name">Name</string>
-    <string name="qr_code_details_tricycle_number">Tricycle Number</string>
+    <string name="qr_code_details_name">Pangalan</string>
+    <string name="qr_code_details_tricycle_number">Numero ng Tricycle</string>
 
     <!--    CATEGORY - TRICYCLE QUEUE-->
     <string name="notification_fragment_title">Notifications</string>
 
     <!--    CATEGORY - TRICYCLE QUEUE-->
-    <string name="tricycle_queue_fragment_title">Tricycle Queue</string>
+    <string name="tricycle_queue_fragment_title">Pila ng Tricycle</string>
     <string name="tricycle_queue_fragment_sub_title">Barangay Lawa Terminal</string>
 
     <!--   LIST OF QUEUE -->
     <string name="list_of_queue_title">Queueing List</string>
-    <string name="list_of_queue_no_available_tricycle_indicator">No Available Tricycle at the Moment.</string>
+    <string name="list_of_queue_no_available_tricycle_indicator">Walang Nakapila na Tricycle sa Kasalukuyan..</string>
 
     <!--   SETTINGS-->
     <string name="settings_fragment_title">Settings</string>
     <string name="settings_fragment_account">Account</string>
     <string name="settings_fragment_notification">Notification</string>
-    <string name="settings_fragment_about_app">About Application</string>
-    <string name="settings_fragment_help">Help</string>
-    <string name="settings_fragment_logout">Logout</string>
+    <string name="settings_fragment_about_app">Tungkol sa Aplikasyon</string>
+    <string name="settings_fragment_language">Wika</string>
+    <string name="settings_fragment_help">Tulong</string>
+    <string name="settings_fragment_logout">Mag-logout</string>
 
     <!--    PROGRESS BAR-->
-    <string name="please_wait">Please wait...</string>
+    <string name="please_wait">Pakihintay...</string>
 
 
 

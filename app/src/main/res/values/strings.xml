@@ -105,46 +105,12 @@
     <string name="settings_fragment_account">Account</string>
     <string name="settings_fragment_notification">Notification</string>
     <string name="settings_fragment_about_app">About Application</string>
+    <string name="settings_fragment_language">Language</string>
     <string name="settings_fragment_help">Help</string>
     <string name="settings_fragment_logout">Logout</string>
 
     <!--    PROGRESS BAR-->
     <string name="please_wait">Please wait...</string>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     <!--    TERMS AND CONDITION-->

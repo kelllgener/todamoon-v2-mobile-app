@@ -4,6 +4,7 @@ import static android.content.ContentValues.TAG;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -12,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,7 +27,6 @@ import com.toda.todamoon_v2.utils.AndroidUtil;
 import com.toda.todamoon_v2.utils.FirebaseUtil;
 import com.toda.todamoon_v2.utils.LoadingDialogUtil;
 
-
 public class LoginDriver extends AppCompatActivity {
 
     private AndroidUtil androidUtil;
@@ -38,15 +37,41 @@ public class LoginDriver extends AppCompatActivity {
     private TextInputEditText emailEditText, passwordEditText;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
+    private static final String SHARED_PREFS = "sharedPrefs";
+    private String email, name, driverUid, tricycleNumber, qrCodeUrl, profileImageUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-      //  EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login_driver);
         initializeViews();
         setupListeners();
+        checkBox();
+    }
 
+    private void checkBox() {
+        SharedPreferences prefs = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        String check = prefs.getString("isLoggedIn", "");
+        if (check.equals("true")) {
+            autoLogin();
+        }
+    }
+
+    private void autoLogin() {
+        SharedPreferences prefs = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        String isLoggedIn = prefs.getString("isLoggedIn", "");
+        if ("true".equals(isLoggedIn)) {
+            // Retrieve the data from SharedPreferences
+            email = prefs.getString("email", "");
+            name = prefs.getString("name", "");
+            driverUid = prefs.getString("driverUid", "");
+            tricycleNumber = prefs.getString("tricycleNumber", "");
+            qrCodeUrl = prefs.getString("qrCodeUrl", "");
+            profileImageUrl = prefs.getString("profileImageUrl", "");
+
+            // Navigate to DriverMainUI with the data
+            navigateToMainUI();
+        }
     }
 
     private void initializeViews() {
@@ -82,11 +107,10 @@ public class LoginDriver extends AppCompatActivity {
                 .addOnCompleteListener(this, task -> {
                     loadingDialogUtil.hideLoadingDialog();
                     if (task.isSuccessful()) {
-                        // Login success
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null) {
-                            // Check user role before proceeding
                             checkUserRole(user);
+                            saveToSharedPreferences();
                         }
                     } else {
                         Toast.makeText(LoginDriver.this, "Login failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -121,53 +145,46 @@ public class LoginDriver extends AppCompatActivity {
     private void updateUI(FirebaseUser user) {
         if (user != null) {
             String userId = user.getUid();
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
             db.collection("users").document(userId).get()
                     .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
+                        if (task.isSuccessful() && task.getResult() != null) {
                             DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
-                                String email = document.getString("email");
-                                String name = document.getString("name");
-                                String driverUid = document.getString("uid");
-                                String tricycleNumber = document.getString("tricycleNumber");
 
-                                // Retrieve the QR code URL from Firebase Storage
-                                FirebaseStorage storage = FirebaseStorage.getInstance();
-                                StorageReference qrCodeRef = storage.getReference().child("qrcodes/" + driverUid + ".png");
+                            // Extract all required fields
+                            email = document.getString("email");
+                            name = document.getString("name");
+                            driverUid = document.getString("uid");
+                            tricycleNumber = document.getString("tricycleNumber");
 
-                                qrCodeRef.getDownloadUrl().addOnSuccessListener(qrCodeUri -> {
-                                    String qrCodeUrl = qrCodeUri.toString();
+                            // Retrieve the QR code URL from Firebase Storage
+                            FirebaseStorage storage = FirebaseStorage.getInstance();
+                            StorageReference qrCodeRef = storage.getReference().child("qrcodes/" + driverUid + ".png");
 
-                                    // Retrieve the profile image URL from Firebase Storage
-                                    StorageReference profileRef = storage.getReference().child("profile_images/" + userId + ".png");
+                            qrCodeRef.getDownloadUrl().addOnSuccessListener(qrCodeUri -> {
+                                qrCodeUrl = qrCodeUri.toString();
 
-                                    profileRef.getDownloadUrl().addOnSuccessListener(profileUri -> {
-                                        String profileImageUrl = profileUri.toString();
+                                // Retrieve the profile image URL from Firebase Storage
+                                StorageReference profileRef = storage.getReference().child("profile_images/" + userId + ".png");
 
-                                        Intent intent = new Intent(LoginDriver.this, DriverMainUI.class);
-                                        intent.putExtra("email", email);
-                                        intent.putExtra("name", name);
-                                        intent.putExtra("driverUid", driverUid);
-                                        intent.putExtra("tricycleNumber", tricycleNumber);
-                                        intent.putExtra("qrCodeUrl", qrCodeUrl);
-                                        intent.putExtra("profileUri", profileImageUrl); // Add profile image URL to intent
-                                        startActivity(intent);
-                                        finish();
+                                profileRef.getDownloadUrl().addOnSuccessListener(profileUri -> {
+                                    profileImageUrl = profileUri.toString();
 
-                                    }).addOnFailureListener(profileException -> {
-                                        Toast.makeText(LoginDriver.this, "Failed to retrieve profile image URL", Toast.LENGTH_SHORT).show();
-                                        Log.e(TAG, "Failed to retrieve profile image URL: ", profileException);
-                                    });
+                                    // Save all data to SharedPreferences
+                                    saveToSharedPreferences();
 
-                                }).addOnFailureListener(qrCodeException -> {
-                                    Toast.makeText(LoginDriver.this, "Failed to retrieve QR code URL", Toast.LENGTH_SHORT).show();
-                                    Log.e(TAG, "Failed to retrieve QR code URL: ", qrCodeException);
+                                    // Navigate to the main UI
+                                    navigateToMainUI();  // Navigate only after all data is fetched
+
+                                }).addOnFailureListener(profileException -> {
+                                    Toast.makeText(LoginDriver.this, "Failed to retrieve profile image URL", Toast.LENGTH_SHORT).show();
+                                    Log.e(TAG, "Failed to retrieve profile image URL: ", profileException);
                                 });
 
-                            } else {
-                                Toast.makeText(LoginDriver.this, "No such user data exists", Toast.LENGTH_SHORT).show();
-                            }
+                            }).addOnFailureListener(qrCodeException -> {
+                                Toast.makeText(LoginDriver.this, "Failed to retrieve QR code URL", Toast.LENGTH_SHORT).show();
+                                Log.e(TAG, "Failed to retrieve QR code URL: ", qrCodeException);
+                            });
+
                         } else {
                             Toast.makeText(LoginDriver.this, "Failed to retrieve user data: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
@@ -175,5 +192,28 @@ public class LoginDriver extends AppCompatActivity {
         }
     }
 
+    private void saveToSharedPreferences() {
+        SharedPreferences prefs = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("name", name);
+        editor.putString("email", email); // Save email
+        editor.putString("driverUid", driverUid); // Save UID
+        editor.putString("tricycleNumber", tricycleNumber);
+        editor.putString("qrCodeUrl", qrCodeUrl);
+        editor.putString("profileImageUrl", profileImageUrl);
+        editor.putString("isLoggedIn", "true");  // Save login status
+        editor.apply();
+    }
 
+    private void navigateToMainUI() {
+        Intent intent = new Intent(LoginDriver.this, DriverMainUI.class);
+        intent.putExtra("email", email);
+        intent.putExtra("name", name);
+        intent.putExtra("driverUid", driverUid);
+        intent.putExtra("tricycleNumber", tricycleNumber);
+        intent.putExtra("qrCodeUrl", qrCodeUrl);
+        intent.putExtra("profileUri", profileImageUrl); // Add profile image URL to intent
+        startActivity(intent);
+        finish();
+    }
 }

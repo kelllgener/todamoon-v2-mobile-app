@@ -17,6 +17,7 @@
             android:orientation="vertical"
             android:layout_marginBottom="8dp"
             >
+
             <androidx.appcompat.widget.Toolbar
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
@@ -156,7 +157,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/aboutLayout"
+                android:id="@+id/languageLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -164,18 +165,19 @@
                 android:padding="15dp"
                 android:layout_marginTop="8dp"
                 android:layout_below="@+id/notificationLayout"
+                android:background="@drawable/ripple_effect_button"
                 >
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_info"
+                    android:src="@drawable/ic_language"
                     android:layout_marginLeft="15dp"/>
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/settings_fragment_about_app"
+                    android:text="@string/settings_fragment_language"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"
                     />
@@ -196,7 +198,7 @@
                 android:gravity="center_vertical"
                 android:padding="15dp"
                 android:layout_marginTop="8dp"
-                android:layout_below="@+id/aboutLayout"
+                android:layout_below="@+id/languageLayout"
                 >
 
                 <ImageView

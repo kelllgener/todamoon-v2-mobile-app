@@ -1,5 +1,6 @@
 package com.toda.todamoon_v2.driver.ui;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 
@@ -36,6 +37,7 @@ public class DriverMainUI extends AppCompatActivity {
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     ActivityDriverMainUiBinding binding;
 
+
     private void initializeView() {
 
     }
@@ -52,7 +54,6 @@ public class DriverMainUI extends AppCompatActivity {
 
         initializeView();
         navigateListener();
-
 
 
     }

@@ -15,8 +15,14 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
+import com.toda.todamoon_v2.FrontPage;
 import com.toda.todamoon_v2.R;
+import com.toda.todamoon_v2.driver.ui.DriverLanguage;
 import com.toda.todamoon_v2.driver.ui.LoginDriver;
+import com.toda.todamoon_v2.passenger.ui.LoginPassenger;
+
+import android.content.Context;
+import android.content.SharedPreferences;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -24,10 +30,12 @@ public class DriverSettingsFragment extends Fragment {
 
     private TextView txtName, txtEmail;
     private CircleImageView imageProfile;
-    private View logLayout;
+    private View logLayout, langLayout;
+
     private static final String ARG_EMAIL = "email";
     private static final String ARG_NAME = "name";
     private static final String ARG_PROFILE_URI = "profileUri";
+    private static final String SHARED_PREFS = "sharedPrefs";
 
 
     public DriverSettingsFragment() {
@@ -63,9 +71,14 @@ public class DriverSettingsFragment extends Fragment {
         txtEmail = view.findViewById(R.id.profEmailDriver);
         imageProfile = view.findViewById(R.id.profileImgDriver);
         logLayout = view.findViewById(R.id.logoutLayoutDriver);
+        langLayout = view.findViewById(R.id.languageLayout);
 
         // Set logout button click listener
         logLayout.setOnClickListener(v -> showLogoutConfirmationDialog());
+        langLayout.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), DriverLanguage.class);
+            startActivity(intent);
+        });
 
         // Retrieve user data based on role
         Bundle args = getArguments();
@@ -90,10 +103,16 @@ public class DriverSettingsFragment extends Fragment {
                 .setPositiveButton("Yes", (dialog, which) -> signOut())
                 .setNegativeButton("No", null)
                 .show();
+
     }
     private void signOut() {
-        FirebaseAuth.getInstance().signOut();
+        // Set the value in SharedPreferences to false
+        SharedPreferences prefs = requireActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("isLoggedIn", ""); // Assuming you are tracking the login state with "isLoggedIn"
+        editor.apply();
 
+        FirebaseAuth.getInstance().signOut();
         // Navigate back to the login screen
         Intent intent = new Intent(getActivity(), LoginDriver.class);
         startActivity(intent);
