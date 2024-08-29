@@ -1,12 +1,12 @@
 package com.toda.todamoon_v2.driver.ui;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,6 +28,21 @@ public class DriverLanguage extends AppCompatActivity {
     private List<LanguageItem> languageList;
     private ImageButton btn_back;
     private LoadingDialogUtil loadingDialogUtil;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        SharedPreferences prefs = newBase.getSharedPreferences("settings", MODE_PRIVATE);
+        String languageCode = prefs.getString("selected_language", "en"); // Default to English
+
+        Locale newLocale = new Locale(languageCode);
+        Locale.setDefault(newLocale);
+
+        Configuration config = newBase.getResources().getConfiguration();
+        config.setLocale(newLocale);
+
+        Context context = newBase.createConfigurationContext(config);
+        super.attachBaseContext(context);
+    }
 
     @SuppressLint("MissingInflatedId")
     @Override

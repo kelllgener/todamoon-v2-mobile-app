@@ -154,6 +154,7 @@ public class RegisterPassenger extends AppCompatActivity {
         String role = "Passenger";
 
         Map<String, Object> userData = new HashMap<>();
+        userData.put("uid", userId);
         userData.put("name", name);
         userData.put("email", email);
         userData.put("password", hashedPassword);

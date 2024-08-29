@@ -1,7 +1,10 @@
 package com.toda.todamoon_v2.passenger.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -14,7 +17,11 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.toda.todamoon_v2.R;
+import com.toda.todamoon_v2.ResetPassword;
+import com.toda.todamoon_v2.driver.ui.DriverLanguage;
+import com.toda.todamoon_v2.driver.ui.LoginDriver;
 import com.toda.todamoon_v2.passenger.ui.LoginPassenger;
+import com.toda.todamoon_v2.passenger.ui.PassengerLanguage;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -22,11 +29,12 @@ public class PassengerSettingsFragment extends Fragment {
 
     private TextView txtName, txtEmail;
     private CircleImageView imageProfile;
-    private View logLayout;
+    private View logLayout, langLayout, resetPassLayout;
     private static final String ARG_ROLE = "role";
     private static final String ARG_EMAIL = "email";
     private static final String ARG_NAME = "name";
     private static final String ARG_PROFILE_URI = "profileUri";
+    private static final String SHARED_PREFS = "sharedPrefs";
 
     public PassengerSettingsFragment() {
         // Required empty public constructor
@@ -49,6 +57,7 @@ public class PassengerSettingsFragment extends Fragment {
 
     }
 
+    @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -60,9 +69,20 @@ public class PassengerSettingsFragment extends Fragment {
         txtEmail = view.findViewById(R.id.profEmail);
         imageProfile = view.findViewById(R.id.profileImg);
         logLayout = view.findViewById(R.id.logoutLayout);
+        langLayout = view.findViewById(R.id.passengerLanguageLayout);
+        resetPassLayout = view.findViewById(R.id.resetPasswordLayout);
 
         // Set logout button click listener
         logLayout.setOnClickListener(v -> showLogoutConfirmationDialog());
+        langLayout.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), PassengerLanguage.class);
+            startActivity(intent);
+        });
+
+        resetPassLayout.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), ResetPassword.class);
+            startActivity(intent);
+        });
 
         // Retrieve user data based on role
         Bundle args = getArguments();
@@ -89,11 +109,15 @@ public class PassengerSettingsFragment extends Fragment {
                 .show();
     }
     private void signOut() {
-        FirebaseAuth.getInstance().signOut();
+        // Set the value in SharedPreferences to false
+        SharedPreferences prefs = requireActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("isLoggedIn", ""); // Assuming you are tracking the login state with "isLoggedIn"
+        editor.apply();
 
+        FirebaseAuth.getInstance().signOut();
         // Navigate back to the login screen
         Intent intent = new Intent(getActivity(), LoginPassenger.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         getActivity().finish(); // Close the current activity
     }

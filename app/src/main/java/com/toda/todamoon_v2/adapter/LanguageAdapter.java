@@ -17,10 +17,10 @@ import java.util.List;
 
 public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.LanguageViewHolder> {
 
-    private Context context;
-    private List<LanguageItem> languageList;
-    private String selectedLanguageCode;
-    private OnLanguageSelectedListener listener;
+    private final Context context;
+    private final List<LanguageItem> languageList;
+    private final String selectedLanguageCode;
+    private final OnLanguageSelectedListener listener;
 
     public interface OnLanguageSelectedListener {
         void onLanguageSelected(String languageCode);
@@ -45,7 +45,8 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.Langua
         LanguageItem languageItem = languageList.get(position);
 
         holder.flagImageView.setImageResource(languageItem.getFlagResourceId());
-        holder.languageTextView.setText(languageItem.getLanguageName() + " " + languageItem.getCountry());
+        holder.languageTextView.setText(languageItem.getLanguageName());
+        holder.displayCountry.setText(languageItem.getCountry());
         holder.displayLanguageTextView.setText(languageItem.getDisplayLanguage());
 
         if (languageItem.getLanguageCode().equals(selectedLanguageCode)) {
@@ -54,9 +55,7 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.Langua
             holder.checkImageView.setVisibility(View.GONE);
         }
 
-        holder.itemView.setOnClickListener(v -> {
-            listener.onLanguageSelected(languageItem.getLanguageCode());
-        });
+        holder.itemView.setOnClickListener(v -> listener.onLanguageSelected(languageItem.getLanguageCode()));
     }
 
     @Override
@@ -68,6 +67,7 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.Langua
         ImageView flagImageView;
         TextView languageTextView;
         TextView displayLanguageTextView;
+        TextView displayCountry;
         ImageView checkImageView;
 
         public LanguageViewHolder(@NonNull View itemView) {
@@ -76,7 +76,7 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.Langua
             languageTextView = itemView.findViewById(R.id.tv_language);
             displayLanguageTextView = itemView.findViewById(R.id.tv_display_language);
             checkImageView = itemView.findViewById(R.id.iv_check);
+            displayCountry = itemView.findViewById(R.id.textViewCountry);
         }
     }
 }
-

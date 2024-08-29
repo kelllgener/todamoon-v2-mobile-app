@@ -3,7 +3,6 @@ package com.toda.todamoon_v2;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.util.Log;
 
 import java.util.Locale;
@@ -26,7 +25,7 @@ public class MyApp extends Application {
         Locale.setDefault(locale);
         Configuration config = new Configuration();
         config.setLocale(locale);
-        Resources resources = getResources();
-        resources.updateConfiguration(config, resources.getDisplayMetrics());
+        getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+        createConfigurationContext(config); // Apply locale to the application context
     }
 }

@@ -1,16 +1,13 @@
 package com.toda.todamoon_v2.passenger.ui;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
+import android.util.Log;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,14 +26,34 @@ public class PassengerLanguage extends AppCompatActivity {
     private RecyclerView recyclerView;
     private LanguageAdapter adapter;
     private List<LanguageItem> languageList;
-    private String selectedLanguageCode = "en";  // Default language code
     private ImageButton btn_back;
     private LoadingDialogUtil loadingDialogUtil;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        SharedPreferences prefs = newBase.getSharedPreferences("settings", MODE_PRIVATE);
+        String languageCode = prefs.getString("selected_language", "en"); // Default to English
+
+        Locale newLocale = new Locale(languageCode);
+        Locale.setDefault(newLocale);
+
+        Configuration config = newBase.getResources().getConfiguration();
+        config.setLocale(newLocale);
+
+        Context context = newBase.createConfigurationContext(config);
+        super.attachBaseContext(context);
+    }
 
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Apply the saved language before setting the content view
+        String savedLanguageCode = getCurrentLanguageCode();
+        Log.d("DriverLanguage", "Saved language code onCreate: " + savedLanguageCode);
+        applyLocale(savedLanguageCode);
+
         setContentView(R.layout.activity_driver_language);
 
         recyclerView = findViewById(R.id.recyclerViewLanguages);
@@ -48,10 +65,7 @@ public class PassengerLanguage extends AppCompatActivity {
         languageList.add(new LanguageItem(R.drawable.ic_flag_ph, "Filipino", "(Philippines)", "(Tagalog)", "tl"));
         // Add more items...
 
-        // Get the saved language code
-        selectedLanguageCode = getCurrentLanguageCode();
-
-        adapter = new LanguageAdapter(this, languageList, selectedLanguageCode, this::changeLanguage);
+        adapter = new LanguageAdapter(this, languageList, savedLanguageCode, this::changeLanguage);
         recyclerView.setAdapter(adapter);
 
         btn_back = findViewById(R.id.btnBacktoSettings);
@@ -60,18 +74,25 @@ public class PassengerLanguage extends AppCompatActivity {
         loadingDialogUtil = new LoadingDialogUtil(this);
     }
 
-    private void changeLanguage(String languageCode) {
-        loadingDialogUtil.showLoadingDialog();
-
-        // Update the locale
+    private void applyLocale(String languageCode) {
+        Log.d("Locale", "Applying locale: " + languageCode);
         Locale locale = new Locale(languageCode);
         Locale.setDefault(locale);
         Configuration config = new Configuration();
         config.setLocale(locale);
         getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+        getApplicationContext().createConfigurationContext(config); // This ensures the context is updated
+    }
+
+    private void changeLanguage(String languageCode) {
+        Log.d("Locale", "Changing language to: " + languageCode);  // Log the new language code
+        loadingDialogUtil.showLoadingDialog();
 
         // Save the selected language in shared preferences
         saveLanguageCode(languageCode);
+
+        // Update the locale
+        applyLocale(languageCode);
 
         // Restart the application to apply changes
         Intent intent = getPackageManager().getLaunchIntentForPackage(getPackageName());
@@ -79,6 +100,8 @@ public class PassengerLanguage extends AppCompatActivity {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();
+        } else {
+            Log.e("Locale", "Failed to restart application. Intent is null.");
         }
 
         // Hide the loading dialog after a short delay
@@ -86,6 +109,7 @@ public class PassengerLanguage extends AppCompatActivity {
     }
 
     private void saveLanguageCode(String languageCode) {
+        Log.d("Preferences", "Saving language code: " + languageCode);
         SharedPreferences prefs = getSharedPreferences("settings", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("selected_language", languageCode);
@@ -94,6 +118,8 @@ public class PassengerLanguage extends AppCompatActivity {
 
     private String getCurrentLanguageCode() {
         SharedPreferences prefs = getSharedPreferences("settings", MODE_PRIVATE);
-        return prefs.getString("selected_language", "en");  // Default to English
+        String languageCode = prefs.getString("selected_language", "en");  // Default to English
+        Log.d("Preferences", "Retrieved language code: " + languageCode);
+        return languageCode;
     }
 }

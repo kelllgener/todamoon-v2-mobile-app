@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.toda.todamoon_v2.FrontPage;
 import com.toda.todamoon_v2.R;
+import com.toda.todamoon_v2.ResetPassword;
 import com.toda.todamoon_v2.driver.ui.DriverLanguage;
 import com.toda.todamoon_v2.driver.ui.LoginDriver;
 import com.toda.todamoon_v2.passenger.ui.LoginPassenger;
@@ -30,7 +31,7 @@ public class DriverSettingsFragment extends Fragment {
 
     private TextView txtName, txtEmail;
     private CircleImageView imageProfile;
-    private View logLayout, langLayout;
+    private View logLayout, langLayout, resetPassLayout;
 
     private static final String ARG_EMAIL = "email";
     private static final String ARG_NAME = "name";
@@ -72,11 +73,17 @@ public class DriverSettingsFragment extends Fragment {
         imageProfile = view.findViewById(R.id.profileImgDriver);
         logLayout = view.findViewById(R.id.logoutLayoutDriver);
         langLayout = view.findViewById(R.id.languageLayout);
+        resetPassLayout = view.findViewById(R.id.resetPasswordLayout);
 
         // Set logout button click listener
         logLayout.setOnClickListener(v -> showLogoutConfirmationDialog());
         langLayout.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), DriverLanguage.class);
+            startActivity(intent);
+        });
+
+        resetPassLayout.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), ResetPassword.class);
             startActivity(intent);
         });
 

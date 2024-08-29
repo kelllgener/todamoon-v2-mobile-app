@@ -104,6 +104,7 @@
     <string name="settings_fragment_title">Settings</string>
     <string name="settings_fragment_account">Account</string>
     <string name="settings_fragment_notification">Notification</string>
+    <string name="settings_fragment_reset_password">I-reset and Password</string>
     <string name="settings_fragment_about_app">Tungkol sa Aplikasyon</string>
     <string name="settings_fragment_language">Wika</string>
     <string name="settings_fragment_help">Tulong</string>

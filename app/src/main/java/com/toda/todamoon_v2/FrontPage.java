@@ -88,12 +88,18 @@ public class FrontPage extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         String email = prefs.getString("email", "");
         String passengerUid = prefs.getString("passengerUid", "");
+        String name = prefs.getString("name", "");
+        String profileImageUrl = prefs.getString("profileImageUrl", "");
 
         Intent intent = new Intent(FrontPage.this, PassengerMainUI.class);
         intent.putExtra("email", email);
         intent.putExtra("passengerUid", passengerUid);
+        intent.putExtra("name", name);
+        intent.putExtra("profileUri", profileImageUrl);
         startActivity(intent);
-        finish();  // Finish the FrontPage activity so the user can't go back to it
+
+        finish();
+        loadingDialogUtil.hideLoadingDialog();
     }
 
     private void initializeView() {

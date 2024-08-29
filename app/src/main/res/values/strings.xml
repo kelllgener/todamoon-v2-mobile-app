@@ -104,6 +104,7 @@
     <string name="settings_fragment_title">Settings</string>
     <string name="settings_fragment_account">Account</string>
     <string name="settings_fragment_notification">Notification</string>
+    <string name="settings_fragment_reset_password">Reset Password</string>
     <string name="settings_fragment_about_app">About Application</string>
     <string name="settings_fragment_language">Language</string>
     <string name="settings_fragment_help">Help</string>
