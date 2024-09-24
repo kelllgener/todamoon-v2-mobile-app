@@ -1,11 +1,10 @@
 package com.toda.todamoon_v2.passenger.ui;
 
-import static android.content.ContentValues.TAG;
-
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -18,7 +17,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -28,57 +26,71 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+import com.toda.todamoon_v2.ForgotPassword;
 import com.toda.todamoon_v2.FrontPage;
 import com.toda.todamoon_v2.R;
-import com.toda.todamoon_v2.driver.ui.LoginDriver;
-import com.toda.todamoon_v2.utils.AndroidUtil;
 import com.toda.todamoon_v2.utils.FirebaseUtil;
 import com.toda.todamoon_v2.utils.LoadingDialogUtil;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class LoginPassenger extends AppCompatActivity {
-
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
     private ImageButton btnBack;
-    private TextView signupPassenger;
+    private TextView signupPassenger, forgotPass;
     private Button googleAuth, emailAuth;
     private TextInputEditText editEmail, editPassword;
-    private AndroidUtil androidUtil;
-    private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private LoadingDialogUtil loadingDialogUtil;
 
     private static final String SHARED_PREFS = "sharedPrefs";
     private static final int RC_SIGN_IN = 20;
-    private String clientId = "853318778029-21fdbfsqqaqlvdhjoimnejuq511g8gd6.apps.googleusercontent.com";
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(updateBaseContextLocale(newBase));
+    }
+
+    private Context updateBaseContextLocale(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("settings", MODE_PRIVATE);
+        String languageCode = prefs.getString("selected_language", "en"); // Default to English
+
+        Locale locale = new Locale(languageCode);
+        Locale.setDefault(locale);
+
+        Configuration config = context.getResources().getConfiguration();
+        config.setLocale(locale);
+
+        return context.createConfigurationContext(config);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_passenger);
 
-        androidUtil = new AndroidUtil();
-
         initializeView();
         setButtonListeners();
-        checkAutoLogin();
+        checkIfLoggedIn();
     }
 
     private void initializeView() {
-        btnBack = findViewById(R.id.btnBack);
-        signupPassenger = findViewById(R.id.signUpPassenger);
-        googleAuth = findViewById(R.id.btnGoogle);
-        emailAuth = findViewById(R.id.btnLogin);
+        btnBack = findViewById(R.id.btn_back);
+        signupPassenger = findViewById(R.id.passenger_create_account);
+        googleAuth = findViewById(R.id.btn_google);
+        emailAuth = findViewById(R.id.passenger_btn_login);
 
-        editEmail = findViewById(R.id.emailPassenger);
-        editPassword = findViewById(R.id.passwordPassenger);
+        editEmail = findViewById(R.id.txt_passenger_email_login);
+        editPassword = findViewById(R.id.txt_passenger_password_login);
+        forgotPass = findViewById(R.id.passenger_forgot_pass_nav);
 
         mAuth = FirebaseUtil.getFirebaseAuthInstance();
+        db = FirebaseUtil.getFirebaseFirestoreInstance();
+        String clientId = "853318778029-21fdbfsqqaqlvdhjoimnejuq511g8gd6.apps.googleusercontent.com";
         mGoogleSignInClient = GoogleSignIn.getClient(this, FirebaseUtil.getGoogleSignInOptions(clientId));
 
         loadingDialogUtil = new LoadingDialogUtil(this);
@@ -90,6 +102,10 @@ public class LoginPassenger extends AppCompatActivity {
             startActivity(intent);
         });
 
+        forgotPass.setOnClickListener(v -> {
+            startActivity(new Intent(LoginPassenger.this, ForgotPassword.class));
+        });
+
         signupPassenger.setOnClickListener(v -> {
             Intent intent = new Intent(LoginPassenger.this, RegisterPassenger.class);
             startActivity(intent);
@@ -99,13 +115,11 @@ public class LoginPassenger extends AppCompatActivity {
         emailAuth.setOnClickListener(v -> {
             String email = editEmail.getText().toString().trim();
             String password = editPassword.getText().toString().trim();
-            String hashedPassword = androidUtil.hashPassword(password);
-
-            loginUser(email, hashedPassword);
+            loginUser(email, password);
         });
     }
 
-    private void checkAutoLogin() {
+    private void checkIfLoggedIn() {
         SharedPreferences prefs = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         String isLoggedIn = prefs.getString("isLoggedIn", "");
         if ("true".equals(isLoggedIn)) {
@@ -115,28 +129,10 @@ public class LoginPassenger extends AppCompatActivity {
 
     private void autoLogin() {
         SharedPreferences prefs = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        String email = prefs.getString("email", "");
-        String name = prefs.getString("name", "");
-        String passengerUid = prefs.getString("passengerUid", "");
-        String profileUri = prefs.getString("profileUri", "");
-
-        proceedToMainUI(email, name, passengerUid, profileUri);
-    }
-
-    private void loginUser(String email, String password) {
-        loadingDialogUtil.showLoadingDialog();
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    loadingDialogUtil.hideLoadingDialog();
-                    if (task.isSuccessful()) {
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        if (user != null) {
-                            checkUserRole(user);
-                        }
-                    } else {
-                        Toast.makeText(LoginPassenger.this, "Authentication failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+        String isLoggedIn = prefs.getString("isLoggedIn", "");
+        if ("true".equals(isLoggedIn)) {
+            navigateToMainUI();
+        }
     }
 
     private void signInWithGoogle() {
@@ -169,7 +165,6 @@ public class LoginPassenger extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         loadingDialogUtil.hideLoadingDialog();
-
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
                             if (user != null) {
@@ -185,20 +180,18 @@ public class LoginPassenger extends AppCompatActivity {
     }
 
     private void addUserToFirestore(FirebaseUser user) {
-        FirebaseFirestore db = FirebaseUtil.getFirebaseFirestoreInstance();
-
         Map<String, Object> userData = new HashMap<>();
         userData.put("uid", user.getUid());
         userData.put("email", user.getEmail());
         userData.put("name", user.getDisplayName());
-        userData.put("profileUri", user.getPhotoUrl() != null ? user.getPhotoUrl().toString() : "");
+        userData.put("profileImage", user.getPhotoUrl() != null ? user.getPhotoUrl().toString() : "");
         userData.put("role", "Passenger");
 
         db.collection("users").document(user.getUid())
                 .set(userData)
                 .addOnSuccessListener(aVoid -> {
-                    saveToSharedPreferences(user);
-                    updateUI(user);
+                    saveToSharedPreferences();
+                    navigateToMainUI();
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(LoginPassenger.this, "Failed to add user to Firestore: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -206,16 +199,30 @@ public class LoginPassenger extends AppCompatActivity {
                 });
     }
 
+    private void loginUser(String email, String password) {
+        loadingDialogUtil.showLoadingDialog();
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    loadingDialogUtil.hideLoadingDialog();
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+                            checkUserRole(user);
+                            saveToSharedPreferences();
+                        }
+                    } else {
+                        Toast.makeText(LoginPassenger.this, "Login failed. Please check your credentials and try again.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
     private void checkUserRole(FirebaseUser user) {
-        FirebaseFirestore db = FirebaseUtil.getFirebaseFirestoreInstance();
         db.collection("users").document(user.getUid()).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         String role = documentSnapshot.getString("role");
                         if ("Passenger".equals(role)) {
-                            saveToSharedPreferences(user);
-                            updateUI(user);
-                            Toast.makeText(LoginPassenger.this, "Login successful", Toast.LENGTH_SHORT).show();
+                            navigateToMainUI();
                         } else {
                             Toast.makeText(LoginPassenger.this, "Only passengers are allowed to log in.", Toast.LENGTH_SHORT).show();
                             mAuth.signOut();
@@ -231,93 +238,17 @@ public class LoginPassenger extends AppCompatActivity {
                 });
     }
 
-    private void saveToSharedPreferences(FirebaseUser user) {
+    private void saveToSharedPreferences() {
         SharedPreferences prefs = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-
-        // Save email
-        editor.putString("email", user.getEmail());
-
-        // Save name and profile image based on sign-in method
-        if (user.getDisplayName() != null) {
-            // Google sign-in
-            editor.putString("name", user.getDisplayName());
-            editor.putString("profileUri", user.getPhotoUrl() != null ? user.getPhotoUrl().toString() : "");
-
-        } else {
-            // Email/password sign-in
-            // Assume that user data from Firestore should be used
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            db.collection("users").document(user.getUid()).get().addOnCompleteListener(task -> {
-                if (task.isSuccessful() && task.getResult() != null) {
-                    DocumentSnapshot document = task.getResult();
-                    String name = document.getString("name");
-                    String profileUri = document.getString("profileUri");
-
-                    // Save name and profile image URL from Firestore
-                    editor.putString("name", name != null ? name : "");
-                    editor.putString("profileUri", profileUri != null ? profileUri : "");
-                    editor.apply();  // Apply changes after setting values
-                } else {
-                    // Handle failure case
-                    Toast.makeText(this, "Failed to retrieve user data from Firestore", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
-        // Save UID and login status
-        editor.putString("passengerUid", user.getUid());
-        editor.putString("isLoggedIn", "true");
+        editor.putString("isLoggedIn", "true");  // Save login status
         editor.apply();
     }
 
-
-    private void updateUI(FirebaseUser user) {
-        if (user != null) {
-            String userId = user.getUid();
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            db.collection("users").document(userId).get()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful() && task.getResult() != null) {
-
-                            DocumentSnapshot document = task.getResult();
-
-                            // Extract all required fields
-                            String email = document.getString("email");
-                            String name = document.getString("name");
-                            String passengerUid = document.getString("uid");
-                            final String[] profileUri = {document.getString("profileUri")};
-
-                            // If profileUri is not available, fetch it from Firebase Storage
-                            if (profileUri[0] == null || profileUri[0].isEmpty()) {
-                                FirebaseStorage storage = FirebaseStorage.getInstance();
-                                StorageReference profileRef = storage.getReference().child("profile_images/" + userId + ".png");
-
-                                profileRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                                    profileUri[0] = uri.toString();
-                                    proceedToMainUI(email, name, passengerUid, profileUri[0]);
-                                }).addOnFailureListener(exception -> {
-                                    Toast.makeText(LoginPassenger.this, "Failed to retrieve profile image URL", Toast.LENGTH_SHORT).show();
-                                    Log.e(TAG, "Failed to retrieve profile image URL: ", exception);
-                                });
-                            } else {
-                                // If profileUri is available directly
-                                proceedToMainUI(email, name, passengerUid, profileUri[0]);
-                            }
-                        } else {
-                            Toast.makeText(LoginPassenger.this, "Failed to retrieve user data: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        }
-    }
-
-    private void proceedToMainUI(String email, String name, String passengerUid, String profileUri) {
+    private void navigateToMainUI() {
         Intent intent = new Intent(LoginPassenger.this, PassengerMainUI.class);
-        intent.putExtra("uid", passengerUid);
-        intent.putExtra("email", email);
-        intent.putExtra("name", name);
-        intent.putExtra("profileUri", profileUri);
         startActivity(intent);
+        Toast.makeText(LoginPassenger.this, "Login successful", Toast.LENGTH_SHORT).show();
         finish();
     }
 }

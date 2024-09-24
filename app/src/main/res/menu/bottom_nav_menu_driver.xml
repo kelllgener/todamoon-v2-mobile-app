@@ -16,21 +16,11 @@
         android:tooltipText="@string/tricycle_queue_fragment_title"
         android:icon="@drawable/ic_tricycle"
         android:id="@+id/menu_driver_category"/>
-<!--    <item-->
-<!--        android:title="@string/notification_fragment_title"-->
-<!--        android:tooltipText="@string/notification_fragment_title"-->
-<!--        android:icon="@drawable/ic_notification"-->
-<!--        android:id="@+id/menu_driver_notification"/>-->
+
     <item
         android:title="@string/settings_fragment_title"
         android:tooltipText="@string/settings_fragment_title"
-        android:icon="@drawable/ic_settings"
+        android:icon="@drawable/ic_my"
         android:id="@+id/menu_driver_settings"/>
-
-    <item
-        android:title="Join Queue"
-        android:tooltipText="Queue"
-        android:icon="@drawable/ic_queue"
-        android:id="@+id/menu_driver_join_queue"/>
-
+    
 </menu>

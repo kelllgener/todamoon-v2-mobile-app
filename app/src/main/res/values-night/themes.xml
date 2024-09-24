@@ -1,7 +1,65 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+
     <!-- Base application theme. -->
-    <style name="Base.Theme.Todamoon_v2" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    <style name="Base.Theme.Todamoon_v2" parent="Theme.Material3.Light.NoActionBar">
+
+        <!-- Primary Brand Color -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <!-- Secondary Brand Color -->
+        <item name="colorSecondary">@color/accent</item>
+        <item name="colorSecondaryVariant">@color/accent</item>
+        <item name="colorOnSecondary">@color/white</item>
+
+        <item name="materialButtonStyle">@style/myButton</item>
+
+        <item name="android:windowBackground">@color/white</item>
+
     </style>
+
+
+    <style name="Theme.Todamoon_v2" parent="Base.Theme.Todamoon_v2" />
+
+
+    <!--    CUSTOMIZED BUTTON-->
+    <style name="myButton" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/primary</item>
+        <item name="android:text">Button</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="cornerRadius">20dp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+
+    <!--    GOOGLE BUTTON-->
+    <style name="googleButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:text">Button</item>
+        <item name="android:textColor">@color/primary_dark</item>
+        <item name="cornerRadius">20dp</item>
+        <item name="strokeWidth">2dp</item>
+        <item name="strokeColor">@color/primary</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+
+    <!--    TRANSACTION BUTTON-->
+    <style name="transactionButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:text">Button</item>
+        <item name="android:textColor">@color/primary_dark</item>
+        <item name="cornerRadius">20dp</item>
+        <item name="strokeWidth">2dp</item>
+        <item name="strokeColor">@color/primary</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:padding">2dp</item>
+    </style>
+
+
+    <!--    ACTIVE BOTTOM NAVIGATION INDICATOR-->
+    <style name="App.Custom.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/primary_light</item>
+    </style>
+
+
 </resources>

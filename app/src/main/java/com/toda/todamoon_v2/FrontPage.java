@@ -1,7 +1,9 @@
 package com.toda.todamoon_v2;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.widget.Button;
 
@@ -17,14 +19,34 @@ import com.toda.todamoon_v2.passenger.ui.PassengerMainUI;
 import com.toda.todamoon_v2.utils.FirebaseUtil;
 import com.toda.todamoon_v2.utils.LoadingDialogUtil;
 
+import java.util.Locale;
+
 public class FrontPage extends AppCompatActivity {
 
     private Button btn_go_to_pass_login, btn_go_to_driver_login;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private static final String SHARED_PREFS = "sharedPrefs";
-    private String email, name, driverUid, tricycleNumber, qrCodeUrl, profileImageUrl;
+    private String isLoggedIn;
     private LoadingDialogUtil loadingDialogUtil;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(updateBaseContextLocale(newBase));
+    }
+
+    private Context updateBaseContextLocale(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("settings", MODE_PRIVATE);
+        String languageCode = prefs.getString("selected_language", "en"); // Default to English
+
+        Locale locale = new Locale(languageCode);
+        Locale.setDefault(locale);
+
+        Configuration config = context.getResources().getConfiguration();
+        config.setLocale(locale);
+
+        return context.createConfigurationContext(config);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,51 +76,37 @@ public class FrontPage extends AppCompatActivity {
                         redirectToDriverMainUI();
                     } else if ("Passenger".equals(role)) {
                         redirectToPassengerMainUI();
+                    } else {
+                        loadingDialogUtil.hideLoadingDialog();
                     }
                 }
             });
+        } else {
+            loadingDialogUtil.hideLoadingDialog();
         }
     }
 
     private void redirectToDriverMainUI() {
-
         SharedPreferences prefs = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        email = prefs.getString("email", "");
-        name = prefs.getString("name", "");
-        driverUid = prefs.getString("driverUid", "");
-        tricycleNumber = prefs.getString("tricycleNumber", "");
-        qrCodeUrl = prefs.getString("qrCodeUrl", "");
-        profileImageUrl = prefs.getString("profileImageUrl", "");
+        isLoggedIn = prefs.getString("isLoggedIn", "");
 
         Intent intent = new Intent(FrontPage.this, DriverMainUI.class);
-        intent.putExtra("email", email);
-
-        intent.putExtra("name", name);
-        intent.putExtra("driverUid", driverUid);
-        intent.putExtra("tricycleNumber", tricycleNumber);
-        intent.putExtra("qrCodeUrl", qrCodeUrl);
-        intent.putExtra("profileUri", profileImageUrl); // Add profile image URL to intent
+        intent.putExtra("isLoggedIn", isLoggedIn);
         startActivity(intent);
+        finish();
 
-        finish();  // Finish the FrontPage activity so the user can't go back to it
         loadingDialogUtil.hideLoadingDialog();
     }
 
     private void redirectToPassengerMainUI() {
         SharedPreferences prefs = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        String email = prefs.getString("email", "");
-        String passengerUid = prefs.getString("passengerUid", "");
-        String name = prefs.getString("name", "");
-        String profileImageUrl = prefs.getString("profileImageUrl", "");
+        isLoggedIn = prefs.getString("isLoggedIn", "");
 
         Intent intent = new Intent(FrontPage.this, PassengerMainUI.class);
-        intent.putExtra("email", email);
-        intent.putExtra("passengerUid", passengerUid);
-        intent.putExtra("name", name);
-        intent.putExtra("profileUri", profileImageUrl);
+        intent.putExtra("isLoggedIn", isLoggedIn);
         startActivity(intent);
-
         finish();
+
         loadingDialogUtil.hideLoadingDialog();
     }
 

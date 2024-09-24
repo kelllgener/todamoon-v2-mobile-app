@@ -15,7 +15,7 @@ import java.util.List;
 
 public class DriverAdapter extends RecyclerView.Adapter<DriverAdapter.DriverViewHolder> {
 
-    private List<DriverQueueingModel> driverList;
+    private final List<DriverQueueingModel> driverList;
 
     public DriverAdapter(List<DriverQueueingModel> driverList) {
         this.driverList = driverList;

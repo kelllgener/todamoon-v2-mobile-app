@@ -22,9 +22,9 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Driver's Information"
+            android:text="@string/driver_info"
             android:textStyle="bold"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:gravity="center"
             android:layout_marginTop="16dp"/>
 
@@ -32,15 +32,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:padding="10dp"
+            android:layout_marginLeft="15dp">
 
             <TextView
                 android:layout_marginTop="30dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="UID"
-                android:textSize="16sp"
-                android:layout_marginLeft="15dp"/>
+                android:text="@string/qr_code_details_uid"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/txtUID"
@@ -48,8 +48,7 @@
                 android:layout_height="wrap_content"
                 android:text="Sample UID"
                 android:textStyle="bold"
-                android:textSize="20sp"
-                android:layout_marginLeft="15dp"/>
+                android:textSize="20sp" />
 
         </LinearLayout>
 
@@ -71,7 +70,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Name"
+                    android:text="@string/qr_code_details_name"
                     android:textSize="16sp"/>
 
                 <TextView
@@ -98,14 +97,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tricycle Number"
+                    android:text="@string/status"
                     android:textSize="16sp"/>
 
                 <TextView
-                    android:id="@+id/txtTricNum"
+                    android:id="@+id/txtStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="122"
+                    android:text="In Queue"
                     android:textStyle="bold"
                     android:textSize="20sp"/>
 

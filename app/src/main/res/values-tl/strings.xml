@@ -5,16 +5,17 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!--   ======== UNIVERSAL FORMS ========   -->
-    <string name="firstname">Firstname</string>
-    <string name="lastname">Lastname</string>
-    <string name="middlename">Middlename</string>
-    <string name="select_barangay">Select Barangay</string>
-    <string name="plate_number">Plate Number</string>
-    <string name="tricycle_number">Tricycle Number</string>
+    <string name="firstname">Pangalan</string>
+    <string name="lastname">Apelyido</string>
+    <string name="middlename">Gitnang Pangalan</string>
+    <string name="select_barangay">Piliin ang Barangay</string>
+    <string name="plate_number">Numero ng Plaka</string>
+    <string name="tricycle_number">Numero ng Traysikel</string>
     <string name="email">Email</string>
-    <string name="phone_number">Phone Number</string>
+    <string name="phone_number">Numero ng Telepono</string>
     <string name="password">Password</string>
-    <string name="confirm_password">Confirm Password</string>
+    <string name="confirm_password">Kumpirmahin ang Password</string>
+
 
     <string name="step1button">Step1Button</string>
     <string name="step2button">step2Button</string>
@@ -23,48 +24,53 @@
     <string name="nextButton">nextButton</string>
 
     <!--    FRONT PAGE-->
-    <string name="front_page_passenger_login">Login as Passenger</string>
-    <string name="front_page_driver_login">Login as Driver</string>
+    <string name="front_page_passenger_login">Mag-login bilang Pasahero</string>
+    <string name="front_page_driver_login">Mag-login bilang Driver</string>
 
     <!--   ======== PASSENGER ========   -->
 
     <!--    PASSENGER LOGIN-->
-    <string name="passenger_login_title">Passenger Login</string>
-    <string name="passenger_login_google">Continue with Google</string>
-    <string name="passenger_login_forgot_pass">Forgot password?</string>
-    <string name="passenger_login_login_button">Login</string>
+    <string name="passenger_login_title">Pag-login ng Pasahero</string>
+    <string name="passenger_login_google">Magpatuloy gamit ang Google</string>
+    <string name="passenger_login_forgot_pass">Nakalimutan ang password?</string>
+    <string name="passenger_login_login_button">Mag-login</string>
     <string name="passenger_login_create_acc">
-            Don\'t have an Account? <font color="#000080"><b>Sign Up</b></font>
+        Wala pang Account? <font color="#000080"><b>Mag-sign Up</b></font>
     </string>
 
+
     <!--    PASSENGER REGISTER-->
-    <string name="passenger_register_firstname">Firstname</string>
-    <string name="passenger_register_button">Register</string>
+    <string name="passenger_register_firstname">Pangalan</string>
+    <string name="passenger_register_button">Mag-register</string>
     <string name="passenger_register_go_to_login">
-            Already have an Account? <font color="#000080"><b>Login</b></font>
+        May Account na? <font color="#000080"><b>Mag-login</b></font>
     </string>
+
 
 
     <!--   ======== DRIVER ========   -->
 
     <!--    DRIVER LOGIN-->
-    <string name="driver_login_title">Driver Login</string>
+    <string name="driver_login_title">Pag-login ng Driver</string>
     <string name="driver_login_email">Email</string>
     <string name="driver_login_password">Password</string>
-    <string name="driver_login_forgot_pass">Forgot password?</string>
-    <string name="driver_login_login_button">Login</string>
+    <string name="driver_login_forgot_pass">Nakalimutan ang password?</string>
+    <string name="driver_login_login_button">Mag-login</string>
     <string name="driver_login_create_acc">
-            Don\'t have an Account? <font color="#000080"><b>Sign Up</b></font>
+        Wala pang Account? <font color="#000080"><b>Mag-sign Up</b></font>
     </string>
+    <string name="forgot_password_email">Ilagay ang Email</string>
+    <string name="forgot_password_title">Nakalimutan ang Password</string>
+
 
     <!--    DRIVER REGISTER-->
-    <string name="driver_register_title">REGISTER DRIVER</string>
+    <string name="driver_register_title">MAGREHISTRO BILANG DRIVER</string>
     <string name="driver_register_icon_personal">personal</string>
-    <string name="driver_register_icon_tricycle">Tricycle</string>
+    <string name="driver_register_icon_tricycle">Traysikel</string>
     <string name="driver_register_icon_account">Account</string>
-    <string name="driver_register_first_form_sub_title">Personal Information</string>
-    <string name="driver_register_second_form_sub_title">Tricycle Information</string>
-    <string name="driver_register_third_form_sub_title">Account Details</string>
+    <string name="driver_register_first_form_sub_title">Personal na Impormasyon</string>
+    <string name="driver_register_second_form_sub_title">Impormasyon ng Traysikel</string>
+    <string name="driver_register_third_form_sub_title">Detalye ng Account</string>
 
     <!--    DRIVER HOME-->
     <string name="home_tooltip">Tahanan</string>
@@ -75,6 +81,8 @@
     <string name="transaction_history">Kasaysayan ng Transaksyon</string>
     <string name="transaction_history_sub_Text">Listahan ng mga Pila na Transaksyon</string>
     <string name="queue_entry">Pagpasok sa Pila</string>
+    <string name="current_terminal_fee">Kasulukuyang Terminal Fee</string>
+    <string name="see_all">See all</string>
 
     <!--    DRIVER GENERATE QR CODE-->
     <string name="qr_code_fragment_title">Qr Code</string>
@@ -94,10 +102,10 @@
 
     <!--    CATEGORY - TRICYCLE QUEUE-->
     <string name="tricycle_queue_fragment_title">Pila ng Tricycle</string>
-    <string name="tricycle_queue_fragment_sub_title">Barangay Lawa Terminal</string>
+    <string name="tricycle_queue_fragment_sub_title">Barangay sa Lawa Terminal</string>
 
     <!--   LIST OF QUEUE -->
-    <string name="list_of_queue_title">Queueing List</string>
+    <string name="list_of_queue_title">Listahan ng Pila</string>
     <string name="list_of_queue_no_available_tricycle_indicator">Walang Nakapila na Tricycle sa Kasalukuyan..</string>
 
     <!--   SETTINGS-->
@@ -109,6 +117,29 @@
     <string name="settings_fragment_language">Wika</string>
     <string name="settings_fragment_help">Tulong</string>
     <string name="settings_fragment_logout">Mag-logout</string>
+    <string name="settings_terms_and_policies">Mga Tuntunin at Patakaran</string>
+
+    <!--   RESET PASSWORD-->
+    <string name="reset_password">I-reset ang Password</string>
+    <string name="current_password">kasalukuyang password</string>
+    <string name="new_password">bagong password</string>
+    <string name="confirm_password2">kumpirmahin ang password</string>
+
+    <!--    BOTTOM SHEET-->
+    <string name="driver_info">Impormasyon ng Driver</string>
+
+    <!--   PROFILE-->
+    <string name="profile_title">Profile</string>
+    <string name="profile_name">Pangalan</string>
+    <string name="overview">Pangkalahatang-ideya</string>
+    <string name="status">Katayuan</string>
+    <string name="phone">Telepono</string>
+    <string name="registered_barangay">Rehistradong Barangay</string>
+    <string name="name">Pangalan</string>
+
+    <!--    EDIT PROFILE-->
+    <string name="edit_profile">I-Edit ang Profile</string>
+
 
     <!--    PROGRESS BAR-->
     <string name="please_wait">Pakihintay...</string>
@@ -116,90 +147,74 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     <!--    TERMS AND CONDITION-->
     <string name="register">Register</string>
     <string name="cancel">Cancel</string>
-    <string name="terms_and_condition_title">Terms and Condition</string>
-    <string name="terms_and_condition_checkbox">I agree to the Terms and Condition</string>
+    <string name="terms_and_condition_title">Mga Tuntunin at Kundisyon</string>
+    <string name="terms_and_condition_checkbox">Sumasang-ayon ako sa Mga Tuntunin at Kundisyon</string>
     <string name="terms_and_condition_context">
-<p>These terms and conditions outline the rules and regulations for the use of TODAMOON mobile application.
-            By registering an account on TODAMOON, you accept these terms and conditions in full.
-            If you disagree with any part of these terms and conditions,
-            please do not proceed with the registration process.
-        </p>
-
-        <b>Account Registration.</b>
         <p>
-            By registering an account on [Your App Name], you agree to provide accurate and up-to-date information, including but not limited to:
-First Name, Middle Name (optional), Last Name, Age, Address, Barangay, Plate Number (for tricycle operators), Tricycle Number, Email Address, Phone Number, Password.
-You are solely responsible for maintaining the confidentiality of your account and password. You agree to accept responsibility for all activities that occur under your account.
-You must notify us immediately of any unauthorized use of your account or any other breach of security.
-
+            Ang mga tuntunin at kundisyong ito ay naglalahad ng mga alituntunin at regulasyon para sa paggamit ng TODAMOON mobile application.
+            Sa pamamagitan ng pagrerehistro ng account sa TODAMOON, tinatanggap mo ang mga tuntunin at kundisyong ito nang buo.
+            Kung hindi ka sang-ayon sa anumang bahagi ng mga tuntunin at kundisyon,
+            mangyaring huwag ipagpatuloy ang proseso ng pagrerehistro. \n \n
         </p>
 
-        <b>Data Collection and Use.</b>
         <p>
-            We collect the personal information you provide during the registration process to create and maintain your account, as well as to provide you with the services offered by TODAMOON.
-We may use your personal information to communicate with you regarding your account, updates to our services, promotional offers, and other relevant information.
-We will not share your personal information with third parties without your consent, except as required by law or as necessary to provide the services requested by you.
-
+            <b>Pagpaparehistro ng Account.</b>
+            Sa pamamagitan ng pagrerehistro ng account sa TODAMOON, sumasang-ayon kang magbigay ng tumpak at napapanahong impormasyon, kabilang ngunit hindi
+            limitado sa: Pangalan, Panggitnang Pangalan (opsyonal), Apelyido, Edad, Address, Barangay, Plate Number
+            (para sa mga operator ng tricycle), Tricycle Number, Email Address, Numero ng Telepono, Password.
+            Ikaw ang tanging responsable sa pagpapanatili ng pagiging kompidensyal ng iyong account at password. Sumasang-ayon kang tanggapin
+            ang responsibilidad para sa lahat ng aktibidad na nangyayari sa ilalim ng iyong account.
+            Dapat mo kaming abisuhan agad sa anumang hindi awtorisadong paggamit ng iyong account o anumang iba pang paglabag sa seguridad. \n \n
         </p>
 
-        <b>Data Security.</b>
+
         <p>
-            We take reasonable measures to protect the security and confidentiality of your personal information. However, we cannot guarantee that unauthorized access, hacking, data loss, or other breaches will never occur.
-You are responsible for keeping your account information secure, including choosing a strong password and not sharing your password with others.
-
+            <b>Pangongolekta at Paggamit ng Datos.</b>
+            Kinokolekta namin ang personal na impormasyon na iyong ibinibigay sa proseso ng pagrerehistro upang lumikha at panatilihin ang iyong account,
+            gayundin upang maibigay sa iyo ang mga serbisyo ng TODAMOON.
+            Maaaring gamitin namin ang iyong personal na impormasyon upang makipag-ugnayan sa iyo tungkol sa iyong account,
+            mga update sa aming mga serbisyo, mga promosyon, at iba pang kaugnay na impormasyon.
+            Hindi namin ibabahagi ang iyong personal na impormasyon sa mga ikatlong partido nang walang iyong pahintulot,
+            maliban kung kinakailangan ng batas o kung kinakailangan upang maibigay ang mga serbisyong hiniling mo. \n \n
         </p>
 
-        <b>Acceptable Use.</b>
+
         <p>
-            You agree to use TODAMOON in compliance with all applicable laws and regulations.
-You agree not to use TODAMOON for any unlawful purpose or in any way that could harm, disable, overburden, or impair our services.
-You agree not to attempt to gain unauthorized access to any part of TODAMOON, its servers, or any other systems or networks connected to TODAMOON.
-
+            <b>Seguridad ng Datos.</b>
+            Gumagamit kami ng makatwirang mga hakbang upang maprotektahan ang seguridad at pagiging kumpidensyal ng iyong personal na impormasyon. Gayunpaman,
+            hindi namin magagarantiya na hindi mangyayari ang hindi awtorisadong pag-access, pag-hack, pagkawala ng datos, o iba pang paglabag.
+            Ikaw ay responsable sa pagpapanatiling ligtas ang impormasyon ng iyong account, kabilang ang pagpili ng malakas na password at hindi pagbabahagi
+            ng iyong password sa iba. \n \n
         </p>
 
-        <b>Changes to Terms and Conditions.</b>
+
         <p>
-            We reserve the right to modify or update these terms and conditions at any time without prior notice. The updated terms and conditions will be posted on TODAMOON, and your continued use of the app after any such changes constitutes your acceptance of the new terms and conditions.
+            <b>Katanggap-tanggap na Paggamit.</b>
+            Sumasang-ayon kang gamitin ang TODAMOON alinsunod sa lahat ng naaangkop na batas at regulasyon.
+            Sumasang-ayon kang hindi gamitin ang TODAMOON para sa anumang labag sa batas na layunin o sa anumang paraan na maaaring makapinsala, magpahina, mag-overload,
+            o makasira sa aming mga serbisyo.
+            Sumasang-ayon kang hindi subukang makakuha ng hindi awtorisadong pag-access sa anumang bahagi ng TODAMOON, sa mga server nito, o sa anumang iba pang mga
+            sistema o network na konektado sa TODAMOON. \n \n
         </p>
 
-        <b>Contact Us.</b>
-        <p>If you have any questions or concerns about these terms and conditions, please contact us at [Your Contact Information].</p>
+
+        <p>
+            <b>Mga Pagbabago sa Mga Tuntunin at Kundisyon.</b>
+            May karapatan kaming baguhin o i-update ang mga tuntunin at kundisyong ito anumang oras nang walang paunang abiso. Ang mga na-update na
+            tuntunin at kundisyon ay ipo-post sa TODAMOON, at ang iyong patuloy na paggamit ng app pagkatapos ng anumang pagbabago ay nangangahulugang
+            tinatanggap mo ang mga bagong tuntunin at kundisyon. \n \n
+        </p>
+
+
+        <p>
+            <b>Makipag-ugnayan sa Amin.</b>
+            Kung mayroon kang anumang mga tanong o alalahanin tungkol sa mga tuntunin at kundisyon na ito, mangyaring makipag-ugnayan sa amin sa
+            numero na 0991-970-6195. \n \n
+        </p>
+
     </string>
 
 </resources>

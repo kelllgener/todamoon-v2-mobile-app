@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/qr_code_fragment_title"
                 android:textColor="@color/primary_text"
-                android:textSize="16sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 android:layout_gravity="center"/>
 
@@ -53,6 +53,17 @@
             android:layout_gravity="center"
             android:contentDescription="Scan Me"
             android:layout_marginBottom="16dp"
+            android:visibility="gone"
+            />
+
+        <!-- Loading Indicator -->
+        <ProgressBar
+            android:id="@+id/loadingIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="visible"
+            android:indeterminateTint="@color/primary_dark"
             />
 
         <TextView
@@ -89,7 +100,7 @@
             />
 
         <Button
-            android:id="@+id/addFromGalleryButton"
+            android:id="@+id/addToGalleryButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/qr_code_fragment_download_button"

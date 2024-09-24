@@ -15,42 +15,75 @@ import com.toda.todamoon_v2.model.TransactionModel;
 import java.util.List;
 import java.util.Locale;
 
-public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHolder> {
-    private Context context;
-    private List<TransactionModel> transactions;
+public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    public TransactionAdapter(Context context, List<TransactionModel> transactions) {
+    private static final int TYPE_DATE_HEADER = 0;
+    private static final int TYPE_TRANSACTION_ITEM = 1;
+
+    private final Context context;
+    private final List<Object> items;
+
+    public TransactionAdapter(Context context, List<Object> items) {
         this.context = context;
-        this.transactions = transactions;
+        this.items = items;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        Object item = items.get(position);
+        if (item instanceof String) {
+            return TYPE_DATE_HEADER;
+        } else if (item instanceof TransactionModel) {
+            return TYPE_TRANSACTION_ITEM;
+        }
+        return super.getItemViewType(position);
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_transaction, parent, false);
-        return new ViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == TYPE_DATE_HEADER) {
+            View view = LayoutInflater.from(context).inflate(R.layout.item_date_header, parent, false);
+            return new DateHeaderViewHolder(view);
+        } else {
+            View view = LayoutInflater.from(context).inflate(R.layout.list_item_transaction, parent, false);
+            return new TransactionViewHolder(view);
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        TransactionModel transaction = transactions.get(position);
-
-        holder.transactionTitle.setText(transaction.getDescription());
-        holder.transactionDateTime.setText(transaction.getFormattedTimestamp());
-        holder.transactionAmount.setText(String.format(Locale.getDefault(), "-₱%.2f", transaction.getAmount()));
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof DateHeaderViewHolder) {
+            String date = (String) items.get(position);
+            ((DateHeaderViewHolder) holder).sectionDate.setText(date);
+        } else if (holder instanceof TransactionViewHolder) {
+            TransactionModel transaction = (TransactionModel) items.get(position);
+            ((TransactionViewHolder) holder).transactionTitle.setText(transaction.getDescription());
+            ((TransactionViewHolder) holder).transactionDateTime.setText(transaction.getFormattedTimestamp());
+            ((TransactionViewHolder) holder).transactionAmount.setText(String.format(Locale.getDefault(), "-₱%.2f", transaction.getAmount()));
+        }
     }
 
     @Override
     public int getItemCount() {
-        return transactions.size();
+        return items.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    static class DateHeaderViewHolder extends RecyclerView.ViewHolder {
+        TextView sectionDate;
+
+        DateHeaderViewHolder(@NonNull View itemView) {
+            super(itemView);
+            sectionDate = itemView.findViewById(R.id.sectionDate);
+        }
+    }
+
+    static class TransactionViewHolder extends RecyclerView.ViewHolder {
         TextView transactionTitle;
         TextView transactionDateTime;
         TextView transactionAmount;
 
-        public ViewHolder(@NonNull View itemView) {
+        TransactionViewHolder(@NonNull View itemView) {
             super(itemView);
             transactionTitle = itemView.findViewById(R.id.transaction_title);
             transactionDateTime = itemView.findViewById(R.id.transaction_date_time);

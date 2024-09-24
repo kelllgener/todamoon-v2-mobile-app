@@ -1,10 +1,12 @@
 package com.toda.todamoon_v2.driver.ui;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -21,8 +23,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,11 +40,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
 import com.toda.todamoon_v2.R;
 import com.toda.todamoon_v2.model.DriverGetterSetter;
 import com.toda.todamoon_v2.utils.AndroidUtil;
@@ -54,13 +49,13 @@ import com.toda.todamoon_v2.utils.LoadingDialogUtil;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class RegisterDriver extends AppCompatActivity {
     private AndroidUtil androidUtil;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    private FirebaseStorage storage;
     private static final int STEP_ONE = 1;
     private static final int STEP_TWO = 2;
     private static final int STEP_THREE = 3;
@@ -68,39 +63,43 @@ public class RegisterDriver extends AppCompatActivity {
     private ImageButton step1Button, step2Button, step3Button, regButton;
     private View contactLeft, contactRight, OtherRight;
     private TextView stepTwoTextView, stepThreeTextView;
-    private ProgressBar progressBar;
     private ImageButton previousButton, nextButton;
     private FrameLayout stepContentContainer;
     private View stepOneLayout, stepTwoLayout, stepThreeLayout;
-    // Declare Form part one field
-    private TextInputEditText firstName, middleName, lastName, age, address;
-
-    // Declare Form part two field
+    private TextInputEditText firstName, lastName;
     private Spinner signUpBarangay;
-    private TextInputEditText plateNumber, tricycleNumber;
-
-    // Declare Form part three field
+    private TextInputEditText tricycleNumber;
     private TextInputEditText email, phoneNumber, password, confirmPassword;
     private CheckBox chkTermsAndCondition;
-    private ScrollView scrollTermsAndCondition;
-    private int currentStep = STEP_ONE; // track step for next and previous button
-    private String inputEmail, inputPassword;
+    private int currentStep = STEP_ONE;
     private int colorPrimaryDark, colorGray, colorWhite;
-    private String barangay;
     private LoadingDialogUtil loadingDialogUtil;
-    private static final String SECRET_KEY = "Todamoon_drivers"; // Replace with a 16-byte key
-
     private static final int PICK_IMAGE_REQUEST = 1;
-    private Uri filePath;
     private Uri imageUri;
     private TextView textViewFileName;
     private Button buttonChooseImage;
-    private StorageReference storageReference;
+    private static final String SECRET_KEY = "Todamoon_drivers";
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(updateBaseContextLocale(newBase));
+    }
+
+    private Context updateBaseContextLocale(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("settings", MODE_PRIVATE);
+        String languageCode = prefs.getString("selected_language", "en"); // Default to English
+
+        Locale locale = new Locale(languageCode);
+        Locale.setDefault(locale);
+
+        Configuration config = context.getResources().getConfiguration();
+        config.setLocale(locale);
+
+        return context.createConfigurationContext(config);
+    }
 
     private void initializeViews() {
-
         androidUtil = new AndroidUtil();
-        // Loading dialog
         loadingDialogUtil = new LoadingDialogUtil(this);
 
         buttonChooseImage = findViewById(R.id.button_choose_file);
@@ -109,9 +108,8 @@ public class RegisterDriver extends AppCompatActivity {
         // FIRESTORE
         mAuth = FirebaseUtil.getFirebaseAuthInstance();
         db = FirebaseUtil.getFirebaseFirestoreInstance();
-        storage = FirebaseUtil.getFirebaseStorageInstance();
-        // MULTIFORM
 
+        // MULTIFORM
         step1Button = findViewById(R.id.stepOneButton);
         step2Button = findViewById(R.id.stepTwoButton);
         step3Button = findViewById(R.id.stepThreeButton);
@@ -136,7 +134,6 @@ public class RegisterDriver extends AppCompatActivity {
 
         // Step one form field
         firstName = stepOneLayout.findViewById(R.id.signupFirstNameText);
-        middleName = stepOneLayout.findViewById(R.id.signupMiddleNameText);
         lastName = stepOneLayout.findViewById(R.id.signupLastNameText);
 
         // Step two form field
@@ -150,8 +147,6 @@ public class RegisterDriver extends AppCompatActivity {
         phoneNumber = stepThreeLayout.findViewById(R.id.signupPhoneNumberText);
         password = stepThreeLayout.findViewById(R.id.signupPasswordText);
         confirmPassword = stepThreeLayout.findViewById(R.id.signupConfirmPasswordText);
-        scrollTermsAndCondition = stepThreeLayout.findViewById(R.id.termsConditionView);
-
 
     }
 
@@ -164,14 +159,10 @@ public class RegisterDriver extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_register_driver);
 
         initializeViews();
-
-        // Set the initial step content
         showStepContent(currentStep);
-
         setPrevNextButtonListener();
         spinner();
 
@@ -180,56 +171,39 @@ public class RegisterDriver extends AppCompatActivity {
     }
 
     private void spinner() {
-        //SPINNER
-        // List of barangays
         String[] barangays = new String[]{"Select Barangay", "Barandal", "Bubuyan", "Bunggo", "Burol", "Kay-anlog", "Prinza", "Punta"};
-
-        // Create an ArrayAdapter for the Spinner
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, barangays) {
             @Override
             public boolean isEnabled(int position) {
-                // Disable the first item (hint)
                 return position != 0;
             }
-
             @Override
             public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView textView = (TextView) view;
 
-                // Set the text color of the disabled hint to gray
                 if (position == 0) {
                     textView.setTextColor(Color.GRAY);
                 } else {
                     textView.setTextColor(Color.BLACK);
                 }
-
                 return view;
             }
         };
-
-        // Drop down layout style - list view with radio button
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // Attaching data adapter to spinner
         signUpBarangay.setAdapter(adapter);
-        // Disable the first item (hint)
     }
 
     private void setPrevNextButtonListener() {
-
         previousButton.setOnClickListener(v -> {
             if (currentStep > 1) {
                 currentStep--; // Decrease currentStep by 1
                 showStepContent(currentStep);
             } else {
-                // If the user is at the first step, navigate back to the login page or the previous screen
-                finish(); // Finish the current activity to prevent the user from navigating back to it
+                finish();
             }
         });
-
         nextButton.setOnClickListener(v -> {
-
             if(currentStep == STEP_ONE) {
                 if(validateStepOne()) {
                     currentStep++; // Increase currentStep by 1
@@ -256,22 +230,14 @@ public class RegisterDriver extends AppCompatActivity {
             }
 
         });
-
         // Show the initial step content
         showStepContent(currentStep);
     }
 
     private void showStepContent(int step) {
-        // Update progress bar
-        //updateProgressBar(step);
-
-        // Update current step
         currentStep = step;
-
-        // Update step buttons
         updateStepButtons();
 
-        // Show corresponding step layout
         switch (step) {
             case STEP_ONE:
                 showStepOne();
@@ -282,16 +248,13 @@ public class RegisterDriver extends AppCompatActivity {
             case STEP_THREE:
                 showStepThree();
                 break;
-
         }
     }
-
     private void updateStepButtons() {
         step1Button.setEnabled(currentStep != STEP_ONE);
         step2Button.setEnabled(currentStep != STEP_TWO);
         step3Button.setEnabled(currentStep != STEP_THREE);
     }
-
     private void showStepOne() {
         initializeColors();
 
@@ -315,8 +278,6 @@ public class RegisterDriver extends AppCompatActivity {
         step3Button.setBackgroundTintList(ColorStateList.valueOf(colorGray));
         stepThreeTextView.setTextColor(colorGray);
         OtherRight.setBackgroundColor(colorGray);
-
-        //progressBar.setProgress(33);
 
         // Reset previous button color
         previousButton.setBackgroundResource(R.drawable.button_style);
@@ -398,8 +359,6 @@ public class RegisterDriver extends AppCompatActivity {
         stepThreeTextView.setTextColor(colorPrimaryDark);
         OtherRight.setBackgroundColor(colorPrimaryDark);
 
-        //progressBar.setProgress(100);
-
         // Change previous button color
         previousButton.setBackgroundColor(colorPrimaryDark);
         previousButton.setColorFilter(colorWhite);
@@ -410,15 +369,11 @@ public class RegisterDriver extends AppCompatActivity {
 
         regButton.setOnClickListener(v -> {
             if(validateStepThree()) {
-                String emails = email.getText().toString().trim();
-                String passwords = password.getText().toString().trim();
-
                 showDialogMessage();
             } else {
                 Toast.makeText(this, "Please fill out all fields.", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     private boolean validateStepOne() {
@@ -583,15 +538,14 @@ public class RegisterDriver extends AppCompatActivity {
 
         String emails = email.getText().toString().trim();
         String passwordInput = password.getText().toString().trim();
-        String hashedPassword = androidUtil.hashPassword(passwordInput);
 
-        mAuth.createUserWithEmailAndPassword(emails, hashedPassword)
+        mAuth.createUserWithEmailAndPassword(emails, passwordInput)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null) {
                             String uid = user.getUid();
-                            uploadImageToFirebase(uid, emails, hashedPassword);
+                            uploadImageToFirebase(uid, emails, passwordInput);
                         }
                     } else {
                         Toast.makeText(RegisterDriver.this, "Registration failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -600,17 +554,17 @@ public class RegisterDriver extends AppCompatActivity {
                 });
     }
 
-    private void uploadImageToFirebase(String uid, String email, String hashedPassword) {
+    private void uploadImageToFirebase(String uid, String email, String password) {
         if (imageUri != null) {
             StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-            StorageReference plateImageRef = storageRef.child("plate_images/" + uid + ".jpg");
+            StorageReference plateImageRef = storageRef.child("plate_images/" + uid + ".png");
 
             plateImageRef.putFile(imageUri)
                     .addOnSuccessListener(taskSnapshot -> {
                         plateImageRef.getDownloadUrl().addOnSuccessListener(uri -> {
                             String plateImageUrl = uri.toString();
                             InputStream profileImageStream = getImageInputStreamFromDrawable(R.drawable.profile_user);
-                            uploadProfileImageToStorage(profileImageStream, uid, email, hashedPassword, plateImageUrl);
+                            uploadProfileImageToStorage(profileImageStream, uid, email, password, plateImageUrl);
                         }).addOnFailureListener(e -> {
                             Log.e("RegisterDriver", "Error getting plate image download URL", e);
                             loadingDialogUtil.hideLoadingDialog();
@@ -625,7 +579,7 @@ public class RegisterDriver extends AppCompatActivity {
         }
     }
 
-    private void uploadProfileImageToStorage(InputStream imageStream, String uid, String email, String hashedPassword, String plateImageUrl) {
+    private void uploadProfileImageToStorage(InputStream imageStream, String uid, String email, String password, String plateImageUrl) {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         StorageReference profileImageRef = storageRef.child("profile_images/" + uid + ".png");
 
@@ -633,7 +587,7 @@ public class RegisterDriver extends AppCompatActivity {
                 .addOnSuccessListener(taskSnapshot -> {
                     profileImageRef.getDownloadUrl().addOnSuccessListener(uri -> {
                         String profileImageUrl = uri.toString();
-                        DriverGetterSetter newDriver = createDriverObject(email, hashedPassword, uid, plateImageUrl, profileImageUrl);
+                        DriverGetterSetter newDriver = createDriverObject(email, password, uid, plateImageUrl, profileImageUrl);
                         runRegistrationTransaction(newDriver);
                     }).addOnFailureListener(e -> {
                         Log.e("RegisterDriver", "Error getting profile image download URL", e);
@@ -644,28 +598,16 @@ public class RegisterDriver extends AppCompatActivity {
                     loadingDialogUtil.hideLoadingDialog();
                 });
     }
-
     private DriverGetterSetter createDriverObject(String email, String password, String uid, String plateImageUrl, String profileImageUrl) {
         String name = firstName.getText().toString().trim() + " " + lastName.getText().toString().trim();
-        barangay = (String) signUpBarangay.getSelectedItem();
-        double initialBalance = 500.00;
+        String barangay = (String) signUpBarangay.getSelectedItem();
+        double initialBalance = 0.00;
         String role = "Driver";
         boolean inQueue = false;
 
         return new DriverGetterSetter(
-                uid,
-                profileImageUrl,
-                name,
-                barangay,
-                tricycleNumber.getText().toString().trim(),
-                email,
-                phoneNumber.getText().toString().trim(),
-                password,
-                confirmPassword.getText().toString().trim(),
-                plateImageUrl,
-                initialBalance,
-                role,
-                inQueue
+                uid, profileImageUrl, name, barangay, tricycleNumber.getText().toString().trim(), email,
+                phoneNumber.getText().toString().trim(), plateImageUrl, initialBalance, role, inQueue
         );
     }
 
@@ -679,6 +621,7 @@ public class RegisterDriver extends AppCompatActivity {
                     transaction.set(userRef, driver);
 
                     Map<String, Object> driverInfo = new HashMap<>();
+                    driverInfo.put("uid", driver.uid);
                     driverInfo.put("Name", driver.name);
                     driverInfo.put("TricycleNumber", driver.tricycleNumber);
                     driverInfo.put("inQueue", driver.inQueue);
@@ -694,13 +637,13 @@ public class RegisterDriver extends AppCompatActivity {
 
     private void generateAndStoreQrCode(DriverGetterSetter driver) {
         try {
-            String driverInfo = "Name: " + driver.name + "\nTricycle Number: " + driver.tricycleNumber + "\nIn Queue: false";
+            String driverInfo = "uid: " + driver.uid;
             String encryptedDriverInfo = androidUtil.encrypt(driverInfo, SECRET_KEY);
 
             Bitmap qrCode = androidUtil.generateQRCode(encryptedDriverInfo);
 
             if (qrCode != null) {
-                uploadQrCodeToStorage(driver.uid, qrCode, driver.name, driver.tricycleNumber, false);
+                uploadQrCodeToStorage(driver.uid, qrCode);
             } else {
                 Log.e("RegisterDriver", "Failed to generate QR code");
                 loadingDialogUtil.hideLoadingDialog();
@@ -711,7 +654,7 @@ public class RegisterDriver extends AppCompatActivity {
         }
     }
 
-    private void uploadQrCodeToStorage(String driverUid, Bitmap qrCode, String driverName, String tricycleNumber, boolean inQueue) {
+    private void uploadQrCodeToStorage(String driverUid, Bitmap qrCode) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         qrCode.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] qrCodeBytes = baos.toByteArray();
@@ -722,7 +665,7 @@ public class RegisterDriver extends AppCompatActivity {
         qrCodeRef.putBytes(qrCodeBytes).addOnSuccessListener(taskSnapshot -> {
             qrCodeRef.getDownloadUrl().addOnSuccessListener(uri -> {
                 String downloadUrl = uri.toString();
-                saveQrCodeUrlToFirestore(driverUid, downloadUrl, driverName, tricycleNumber, inQueue);
+                saveQrCodeUrlToFirestore(driverUid, downloadUrl);
             }).addOnFailureListener(e -> {
                 Log.e("RegisterDriver", "Error getting QR code download URL", e);
                 loadingDialogUtil.hideLoadingDialog();
@@ -733,14 +676,11 @@ public class RegisterDriver extends AppCompatActivity {
         });
     }
 
-    private void saveQrCodeUrlToFirestore(String driverUid, String downloadUrl, String driverName, String tricycleNumber, boolean inQueue) {
+    private void saveQrCodeUrlToFirestore(String driverUid, String downloadUrl) {
         Map<String, Object> qrCodeData = new HashMap<>();
-        qrCodeData.put("driverUid", driverUid);
-        qrCodeData.put("name", driverName);
-        qrCodeData.put("tricycleNumber", tricycleNumber);
-        qrCodeData.put("inQueue", inQueue);
         qrCodeData.put("qrCodeUrl", downloadUrl);
 
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("qr_code").document(driverUid).set(qrCodeData).addOnSuccessListener(aVoid -> {
             loadingDialogUtil.hideLoadingDialog();
             Intent intent = new Intent(RegisterDriver.this, LoginDriver.class);
@@ -753,37 +693,9 @@ public class RegisterDriver extends AppCompatActivity {
         });
     }
 
+
     public InputStream getImageInputStreamFromDrawable(int drawableId) {
         return getResources().openRawResource(drawableId);
-    }
-
-    private void uploadImageToStorage(InputStream imageStream, String driverUid) {
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        StorageReference imageRef = storageRef.child("driver_images/" + driverUid + ".png");
-
-        imageRef.putStream(imageStream)
-                .addOnSuccessListener(taskSnapshot -> {
-                    imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                        String downloadUrl = uri.toString();
-                        saveImageUrlToFirestore(driverUid, downloadUrl);
-                    }).addOnFailureListener(e -> {
-                        Toast.makeText(RegisterDriver.this, "Failed to get image URL", Toast.LENGTH_SHORT).show();
-                        Log.e("RegisterDriver", "Failed to get image URL", e);
-                    });
-                }).addOnFailureListener(e -> {
-                    Toast.makeText(RegisterDriver.this, "Failed to upload image", Toast.LENGTH_SHORT).show();
-                    Log.e("RegisterDriver", "Failed to upload image", e);
-                });
-    }
-
-    private void saveImageUrlToFirestore(String driverUid, String imageUrl) {
-        DocumentReference driverRef = db.collection("drivers").document(driverUid);
-        driverRef.update("imageProfile", imageUrl).addOnSuccessListener(aVoid -> {
-            Toast.makeText(RegisterDriver.this, "Image URL saved successfully", Toast.LENGTH_SHORT).show();
-        }).addOnFailureListener(e -> {
-            Toast.makeText(RegisterDriver.this, "Failed to save image URL", Toast.LENGTH_SHORT).show();
-            Log.e("RegisterDriver", "Failed to save image URL", e);
-        });
     }
 
 

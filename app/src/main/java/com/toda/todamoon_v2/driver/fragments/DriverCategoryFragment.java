@@ -27,16 +27,10 @@ public class DriverCategoryFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static DriverCategoryFragment newInstance(String param1, String param2) {
-        DriverCategoryFragment fragment = new DriverCategoryFragment();
-        Bundle args = new Bundle();
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        db = FirebaseUtil.getFirebaseFirestoreInstance();
     }
 
     @Override
@@ -44,8 +38,6 @@ public class DriverCategoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.driver_category_fragment, container, false);
-
-        db = FirebaseUtil.getFirebaseFirestoreInstance();
 
         // Initialize layout references
         layoutPrinza = view.findViewById(R.id.layoutPrinza);
@@ -95,10 +87,8 @@ public class DriverCategoryFragment extends Fragment {
                         Toast.makeText(getContext(), "Failed to fetch driver data for " + barangayName, Toast.LENGTH_SHORT).show();
                         return;
                     }
-
                     long driverCount = queryDocumentSnapshots1.size();
                     updateDriverCountInLayout(barangayName, driverCount);
-
                 });
             }
             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {

@@ -31,7 +31,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/settings_fragment_title"
                     android:textColor="@color/primary_text"
-                    android:textSize="16sp"
+                    android:textSize="20sp"
                     android:textStyle="bold"
                     android:layout_gravity="center"/>
 
@@ -47,7 +47,7 @@
 
 
         <TextView
-            android:id="@+id/lblAccount"
+            android:id="@+id/lbl_account"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/settings_fragment_account"
@@ -57,22 +57,35 @@
             />
 
         <LinearLayout
-            android:id="@+id/accContent"
+            android:id="@+id/account_content_driver"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_below="@+id/lblAccount"
+            android:layout_below="@+id/lbl_account"
             android:layout_marginTop="10dp"
-            android:padding="10dp">
+            android:padding="10dp"
+            android:background="@drawable/ripple_effect_button"
+            >
 
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profileImgDriver"
+                android:id="@+id/profile_image_driver"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:src="@mipmap/ic_launcher_round"
                 android:layout_marginLeft="20dp"
-                android:layout_gravity="center_vertical"/>
+                android:layout_gravity="center_vertical"
+                android:visibility="gone"/>
+
+            <!-- Loading Indicator -->
+            <ProgressBar
+                android:id="@+id/loadingIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="visible"
+                android:indeterminateTint="@color/primary_dark"
+                android:layout_marginLeft="20dp"
+                />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -83,18 +96,16 @@
                 android:layout_gravity="center_vertical">
 
                 <TextView
-                    android:id="@+id/profNameDriver"
+                    android:id="@+id/profile_name_driver"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Name"
                     android:textColor="@color/black"
                     android:textSize="14sp"/>
 
                 <TextView
-                    android:id="@+id/profEmailDriver"
+                    android:id="@+id/profile_email_driver"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Email"
                     android:layout_marginTop="6dp"
                     android:textColor="@color/gray"
                     android:textSize="14sp"/>
@@ -114,7 +125,7 @@
             android:layout_height="1dp"
             android:background="@color/primary_light"
             android:layout_marginTop="10dp"
-            android:layout_below="@+id/accContent"/>
+            android:layout_below="@+id/account_content_driver"/>
 
 
         <RelativeLayout
@@ -125,7 +136,7 @@
             >
 
             <LinearLayout
-                android:id="@+id/resetPasswordLayout"
+                android:id="@+id/reset_password_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -158,14 +169,14 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/languageLayout"
+                android:id="@+id/language_layout_driver"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:padding="15dp"
                 android:layout_marginTop="8dp"
-                android:layout_below="@+id/resetPasswordLayout"
+                android:layout_below="@+id/reset_password_layout"
                 android:background="@drawable/ripple_effect_button"
                 >
 
@@ -192,26 +203,27 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/helpLayout"
+                android:id="@+id/terms_and_policy_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:padding="15dp"
                 android:layout_marginTop="8dp"
-                android:layout_below="@+id/languageLayout"
+                android:layout_below="@+id/language_layout_driver"
+                android:background="@drawable/ripple_effect_button"
                 >
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_help"
-                    android:layout_marginLeft="15dp"/>
+                    android:src="@drawable/ic_book"
+                    android:layout_marginLeft="15dp" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/settings_fragment_help"
+                    android:text="@string/settings_terms_and_policies"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"
                     />
@@ -225,14 +237,14 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/logoutLayoutDriver"
+                android:id="@+id/logout_layout_driver"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:padding="15dp"
                 android:layout_marginTop="8dp"
-                android:layout_below="@+id/helpLayout"
+                android:layout_below="@+id/terms_and_policy_layout"
                 android:background="@drawable/ripple_effect_button"
                 >
 
@@ -251,7 +263,7 @@
                     />
 
                 <ImageButton
-                    android:id="@+id/btnLogout"
+                    android:id="@+id/btn_logout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_forward_arrow_ios"

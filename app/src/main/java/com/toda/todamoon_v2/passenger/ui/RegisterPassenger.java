@@ -1,6 +1,9 @@
 package com.toda.todamoon_v2.passenger.ui;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,18 +15,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.toda.todamoon_v2.FrontPage;
 import com.toda.todamoon_v2.R;
-import com.toda.todamoon_v2.utils.AndroidUtil;
 import com.toda.todamoon_v2.utils.FirebaseUtil;
-
-import com.google.android.material.textfield.TextInputEditText;
 import com.toda.todamoon_v2.utils.LoadingDialogUtil;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class RegisterPassenger extends AppCompatActivity {
@@ -31,152 +33,177 @@ public class RegisterPassenger extends AppCompatActivity {
     private TextInputEditText firstname, lastname, email, password, confirmPassword;
     private Button registerButton;
     private FirebaseAuth mAuth;
-    private AndroidUtil androidUtil;
-    private String hashedPassword;
+    private FirebaseFirestore db;
     private LoadingDialogUtil loadingDialogUtil;
     private TextView go_to_login;
     private Uri imageUri;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(updateBaseContextLocale(newBase));
+    }
+
+    private Context updateBaseContextLocale(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("settings", MODE_PRIVATE);
+        String languageCode = prefs.getString("selected_language", "en"); // Default to English
+
+        Locale locale = new Locale(languageCode);
+        Locale.setDefault(locale);
+
+        Configuration config = context.getResources().getConfiguration();
+        config.setLocale(locale);
+
+        return context.createConfigurationContext(config);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_passenger);
 
+        initializeFirebase();
         initializeView();
+        setButtonListeners();
+    }
+
+    private void initializeFirebase() {
         mAuth = FirebaseUtil.getFirebaseAuthInstance();
-        androidUtil = new AndroidUtil();
+        db = FirebaseUtil.getFirebaseFirestoreInstance();
+    }
 
+    private void initializeView() {
+        firstname = findViewById(R.id.txt_firstname_passenger);
+        lastname = findViewById(R.id.txt_lastname_passenger);
+        email = findViewById(R.id.txt_email_passenger);
+        password = findViewById(R.id.txt_password_passenger);
+        confirmPassword = findViewById(R.id.txt_confirm_password_passenger);
+        registerButton = findViewById(R.id.btn_register_passenger);
+        go_to_login = findViewById(R.id.txt_go_to_login);
+        loadingDialogUtil = new LoadingDialogUtil(this);  // Loading dialog for registration process
+    }
+
+    private void setButtonListeners() {
         registerButton.setOnClickListener(v -> registerUser());
-
         go_to_login.setOnClickListener(v -> {
             Intent intent = new Intent(RegisterPassenger.this, LoginPassenger.class);
             startActivity(intent);
         });
     }
 
-    private void initializeView() {
-        firstname = findViewById(R.id.editFirstNamePassenger);
-        lastname = findViewById(R.id.editLastNamePassenger);
-        email = findViewById(R.id.editEmailPassenger);
-        password = findViewById(R.id.editPasswordPassenger);
-        confirmPassword = findViewById(R.id.editConfirmPassPassenger);
-        registerButton = findViewById(R.id.btnRegister);  // Assuming you have a register button in your XML
-        // Loading dialog
-        loadingDialogUtil = new LoadingDialogUtil(this);
-        go_to_login = findViewById(R.id.txtLogin);
-    }
-
     private void registerUser() {
+        // Get user inputs
         String firstName = firstname.getText().toString().trim();
         String lastName = lastname.getText().toString().trim();
-        String name = firstName + " " + lastName;
         String emailInput = email.getText().toString().trim();
         String passwordInput = password.getText().toString().trim();
         String confirmPasswordInput = confirmPassword.getText().toString().trim();
 
-        if (firstName.isEmpty() || lastName.isEmpty() || emailInput.isEmpty() || passwordInput.isEmpty() || confirmPasswordInput.isEmpty()) {
-            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+        // Validate inputs
+        if (!validateInputs(firstName, lastName, emailInput, passwordInput, confirmPasswordInput)) {
             return;
         }
 
-        if (!passwordInput.equals(confirmPasswordInput)) {
-            Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        loadingDialogUtil.showLoadingDialog();  // Show loading dialog
 
-        hashedPassword = androidUtil.hashPassword(passwordInput);
-        if (hashedPassword == null) {
-            Toast.makeText(this, "Failed to hash password", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        loadingDialogUtil.showLoadingDialog();
-        mAuth.createUserWithEmailAndPassword(emailInput, hashedPassword)
+        // Register user using Firebase Authentication
+        mAuth.createUserWithEmailAndPassword(emailInput, passwordInput)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null) {
-                            uploadProfileImage(user, name, hashedPassword);
+                            uploadProfileImage(user, firstName + " " + lastName);
                         }
                     } else {
-                        Toast.makeText(RegisterPassenger.this, "Registration failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        showErrorMessage("Registration failed: " + task.getException().getMessage());
                         loadingDialogUtil.hideLoadingDialog();
                     }
                 });
     }
 
-    private void uploadProfileImage(FirebaseUser user, String name, String hashedPassword) {
-        if (imageUri != null) {
-            StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-            StorageReference profileImageRef = storageRef.child("profile_images/" + user.getUid() + ".png");
+    private boolean validateInputs(String firstName, String lastName, String emailInput, String passwordInput, String confirmPasswordInput) {
+        if (firstName.isEmpty() || lastName.isEmpty() || emailInput.isEmpty() || passwordInput.isEmpty() || confirmPasswordInput.isEmpty()) {
+            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            return false;
+        }
 
-            profileImageRef.putFile(imageUri)
-                    .addOnSuccessListener(taskSnapshot -> {
-                        profileImageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                            String profileImageUrl = uri.toString();
-                            saveUserToDatabase(user, name, hashedPassword, profileImageUrl);
-                        }).addOnFailureListener(e -> {
-                            Log.e("RegisterUser", "Error getting profile image download URL", e);
-                            loadingDialogUtil.hideLoadingDialog();
-                        });
-                    }).addOnFailureListener(e -> {
-                        Log.e("RegisterUser", "Error uploading profile image", e);
-                        loadingDialogUtil.hideLoadingDialog();
-                    });
+        if (!passwordInput.equals(confirmPasswordInput)) {
+            Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
+    }
+
+    private void uploadProfileImage(FirebaseUser user, String fullName) {
+        if (imageUri != null) {
+            uploadImageToFirebase(user, fullName, imageUri);
         } else {
-            // If no image is selected, proceed with a default image
-            InputStream profileImageStream = getImageInputStreamFromDrawable(R.drawable.profile_user);
-            uploadDefaultProfileImage(profileImageStream, user, name, hashedPassword);
+            // If no image is selected, use a default image
+            InputStream defaultImageStream = getImageInputStreamFromDrawable(R.drawable.profile_user);
+            uploadDefaultImage(user, fullName, defaultImageStream);
         }
     }
 
-    private void uploadDefaultProfileImage(InputStream imageStream, FirebaseUser user, String name, String hashedPassword) {
+    private void uploadImageToFirebase(FirebaseUser user, String fullName, Uri imageUri) {
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference profileImageRef = storageRef.child("profile_images/" + user.getUid() + ".png");
+
+        profileImageRef.putFile(imageUri)
+                .addOnSuccessListener(taskSnapshot -> profileImageRef.getDownloadUrl()
+                        .addOnSuccessListener(uri -> saveUserToDatabase(user, fullName, uri.toString()))
+                        .addOnFailureListener(e -> handleImageUploadFailure(e))
+                ).addOnFailureListener(e -> handleImageUploadFailure(e));
+    }
+
+    private void uploadDefaultImage(FirebaseUser user, String fullName, InputStream imageStream) {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         StorageReference profileImageRef = storageRef.child("profile_images/" + user.getUid() + ".png");
 
         profileImageRef.putStream(imageStream)
-                .addOnSuccessListener(taskSnapshot -> {
-                    profileImageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                        String profileImageUrl = uri.toString();
-                        saveUserToDatabase(user, name, hashedPassword, profileImageUrl);
-                    }).addOnFailureListener(e -> {
-                        Log.e("RegisterUser", "Error getting profile image download URL", e);
-                        loadingDialogUtil.hideLoadingDialog();
-                    });
-                }).addOnFailureListener(e -> {
-                    Log.e("RegisterUser", "Error uploading profile image", e);
-                    loadingDialogUtil.hideLoadingDialog();
-                });
+                .addOnSuccessListener(taskSnapshot -> profileImageRef.getDownloadUrl()
+                        .addOnSuccessListener(uri -> saveUserToDatabase(user, fullName, uri.toString()))
+                        .addOnFailureListener(e -> handleImageUploadFailure(e))
+                ).addOnFailureListener(e -> handleImageUploadFailure(e));
     }
 
-    private void saveUserToDatabase(FirebaseUser user, String name, String hashedPassword, String profileImageUrl) {
-        String userId = user.getUid();
-        String email = user.getEmail();
-        String role = "Passenger";
-
+    private void saveUserToDatabase(FirebaseUser user, String fullName, String profileImage) {
         Map<String, Object> userData = new HashMap<>();
-        userData.put("uid", userId);
-        userData.put("name", name);
-        userData.put("email", email);
-        userData.put("password", hashedPassword);
-        userData.put("role", role);
-        userData.put("profileImageUrl", profileImageUrl);
+        userData.put("uid", user.getUid());
+        userData.put("name", fullName);
+        userData.put("email", user.getEmail());
+        userData.put("role", "Passenger");
+        userData.put("profileImage", profileImage);
 
-        FirebaseUtil.getFirebaseFirestoreInstance().collection("users").document(userId).set(userData)
+        db.collection("users").document(user.getUid()).set(userData)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(RegisterPassenger.this, "Registration successful", Toast.LENGTH_SHORT).show();
                     loadingDialogUtil.hideLoadingDialog();
-                    Intent intent = new Intent(RegisterPassenger.this, LoginPassenger.class);
-                    startActivity(intent);
-                    finish();
+                    redirectToLogin();
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(RegisterPassenger.this, "Failed to save user data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    showErrorMessage("Failed to save user data: " + e.getMessage());
                     loadingDialogUtil.hideLoadingDialog();
                 });
     }
 
+    private void redirectToLogin() {
+        Intent intent = new Intent(RegisterPassenger.this, LoginPassenger.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void handleImageUploadFailure(Exception e) {
+        Log.e("RegisterUser", "Error uploading image", e);
+        showErrorMessage("Error uploading profile image");
+        loadingDialogUtil.hideLoadingDialog();
+    }
+
+    private void showErrorMessage(String message) {
+        Toast.makeText(RegisterPassenger.this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    // Utility method to fetch an image as InputStream from drawable
     public InputStream getImageInputStreamFromDrawable(int drawableId) {
         return getResources().openRawResource(drawableId);
     }
-
 }

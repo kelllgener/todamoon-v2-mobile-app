@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    tools:context=".driver.ui.DriverLanguage">
+    tools:context=".DriverLanguage">
 
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
@@ -20,7 +20,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_back_arrow"
-            android:background="@drawable/ripple_effect_icon"/>
+            android:background="@drawable/ripple_effect_icon"
+            android:layout_marginHorizontal="10dp"/>
 
 
         <TextView
@@ -28,9 +29,7 @@
             android:layout_height="wrap_content"
             android:text="@string/settings_fragment_language"
             android:textColor="@color/primary_text"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_gravity="center"/>
+            android:textSize="18sp" />
 
     </androidx.appcompat.widget.Toolbar>
 

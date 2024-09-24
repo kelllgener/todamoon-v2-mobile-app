@@ -19,25 +19,16 @@ import com.toda.todamoon_v2.driver.ui.ListOfQueue;
 
 public class PassengerHomeFragment extends Fragment {
     private FirebaseFirestore db;
-    // Layouts for each barangay
     private LinearLayout layoutPrinza, layoutBarandal, layoutBunggo, layoutBubuyan, layoutPunta, layoutBurol, layoutKayanlog;
 
     public PassengerHomeFragment() {
         // Required empty public constructor
     }
 
-
-    public static PassengerHomeFragment newInstance(String param1, String param2) {
-        PassengerHomeFragment fragment = new PassengerHomeFragment();
-        Bundle args = new Bundle();
-
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        db = FirebaseFirestore.getInstance();
     }
 
     @Override
@@ -45,8 +36,6 @@ public class PassengerHomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_passenger_home, container, false);
-
-        db = FirebaseFirestore.getInstance();
 
         // Initialize layout references
         layoutPrinza = view.findViewById(R.id.layoutPrinza);
@@ -88,7 +77,6 @@ public class PassengerHomeFragment extends Fragment {
                 Toast.makeText(getContext(), "Failed to fetch driver data", Toast.LENGTH_SHORT).show();
                 return;
             }
-
             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                 String barangayName = document.getId();
                 document.getReference().collection("drivers").addSnapshotListener((queryDocumentSnapshots1, e1) -> {
@@ -97,12 +85,10 @@ public class PassengerHomeFragment extends Fragment {
                         Toast.makeText(getContext(), "Failed to fetch driver data for " + barangayName, Toast.LENGTH_SHORT).show();
                         return;
                     }
-
                     long driverCount = queryDocumentSnapshots1.size();
                     updateDriverCountInLayout(barangayName, driverCount);
                 });
             }
-
             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                 String barangayName = document.getId();
                 document.getReference().collection("queue").addSnapshotListener((queryDocumentSnapshots1, e1) -> {

@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="Base.Theme.Todamoon_v2" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.Todamoon_v2" parent="Theme.Material3.Light.NoActionBar">
 
         <!-- Primary Brand Color -->
         <item name="colorPrimary">@color/primary</item>

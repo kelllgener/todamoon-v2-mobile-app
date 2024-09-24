@@ -8,8 +8,6 @@ public class DriverGetterSetter {
     public String tricycleNumber;
     public String email;
     public String phoneNumber;
-    public String password;
-    public String confirmPassword;
     public String plateNumber;
     public double balance;
     public String role;
@@ -23,8 +21,6 @@ public class DriverGetterSetter {
                               String tricycleNumber,
                               String email,
                               String phoneNumber,
-                              String password,
-                              String confirmPassword,
                               String plateNumber,
                               double balance,
                               String role,
@@ -36,8 +32,6 @@ public class DriverGetterSetter {
         this.tricycleNumber = tricycleNumber;
         this.email = email;
         this.phoneNumber = phoneNumber;
-        this.password = password;
-        this.confirmPassword = confirmPassword;
         this.plateNumber = plateNumber;
         this.balance = balance;
         this.role = role;
@@ -72,9 +66,6 @@ public class DriverGetterSetter {
 
     public String getPhoneNumber() { return phoneNumber; }
     public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
-
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
 
     public String getPlateNumber() { return plateNumber; }
     public void setPlateNumber(String plateNumber) { this.plateNumber = plateNumber; }

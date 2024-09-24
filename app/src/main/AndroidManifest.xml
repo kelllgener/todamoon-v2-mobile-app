@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".MyApp"
+        android:name=".TodamoonApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -17,10 +17,28 @@
         android:theme="@style/Theme.Todamoon_v2"
         tools:targetApi="31">
         <activity
+            android:name=".TermsAndPolicies"
+            android:exported="false" />
+        <activity
+            android:name=".driver.ui.TransactionHistory"
+            android:exported="false" />
+        <activity
+            android:name=".passenger.ui.PassengerProfile"
+            android:exported="false" />
+        <activity
+            android:name=".driver.ui.EditProfileDetails"
+            android:exported="false" />
+        <activity
+            android:name=".driver.ui.DriverProfile"
+            android:exported="false" />
+        <activity
+            android:name=".ForgotPassword"
+            android:exported="false" />
+        <activity
             android:name=".ResetPassword"
             android:exported="false" />
         <activity
-            android:name=".driver.ui.DriverLanguage"
+            android:name=".DriverLanguage"
             android:configChanges="locale|screenSize|orientation"
             android:exported="false" />
         <activity

@@ -1,6 +1,5 @@
 package com.toda.todamoon_v2.passenger.fragments;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +8,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,48 +16,39 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.toda.todamoon_v2.R;
 import com.toda.todamoon_v2.ResetPassword;
-import com.toda.todamoon_v2.driver.ui.DriverLanguage;
-import com.toda.todamoon_v2.driver.ui.LoginDriver;
+import com.toda.todamoon_v2.DriverLanguage;
+import com.toda.todamoon_v2.TermsAndPolicies;
 import com.toda.todamoon_v2.passenger.ui.LoginPassenger;
-import com.toda.todamoon_v2.passenger.ui.PassengerLanguage;
+import com.toda.todamoon_v2.passenger.ui.PassengerProfile;
+import com.toda.todamoon_v2.utils.FirebaseUtil;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PassengerSettingsFragment extends Fragment {
-
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    private FirebaseUser user;
     private TextView txtName, txtEmail;
     private CircleImageView imageProfile;
-    private View logLayout, langLayout, resetPassLayout;
-    private static final String ARG_ROLE = "role";
-    private static final String ARG_EMAIL = "email";
-    private static final String ARG_NAME = "name";
-    private static final String ARG_PROFILE_URI = "profileUri";
     private static final String SHARED_PREFS = "sharedPrefs";
 
     public PassengerSettingsFragment() {
         // Required empty public constructor
     }
 
-
-    public static PassengerSettingsFragment newInstance(String email, String name, String profileUri) {
-        PassengerSettingsFragment fragment = new PassengerSettingsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_EMAIL, email);
-        args.putString(ARG_NAME, name);
-        args.putString(ARG_PROFILE_URI, profileUri);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        // Initialize Firebase components
+        mAuth = FirebaseUtil.getFirebaseAuthInstance();
+        db = FirebaseUtil.getFirebaseFirestoreInstance();
+        user = mAuth.getCurrentUser();
     }
 
-    @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -65,17 +56,18 @@ public class PassengerSettingsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_passenger_settings, container, false);
 
         // Initialize views
-        txtName = view.findViewById(R.id.profName);
-        txtEmail = view.findViewById(R.id.profEmail);
-        imageProfile = view.findViewById(R.id.profileImg);
-        logLayout = view.findViewById(R.id.logoutLayout);
-        langLayout = view.findViewById(R.id.passengerLanguageLayout);
-        resetPassLayout = view.findViewById(R.id.resetPasswordLayout);
+        txtName = view.findViewById(R.id.profile_name_passenger);
+        txtEmail = view.findViewById(R.id.profile_email_passenger);
+        imageProfile = view.findViewById(R.id.profile_image_passenger);
+        View logLayout = view.findViewById(R.id.logout_layout_passenger);
+        View langLayout = view.findViewById(R.id.language_layout_passenger);
+        View resetPassLayout = view.findViewById(R.id.reset_password_layout);
+        View accountLayout = view.findViewById(R.id.account_content_passenger);
+        View termsAndPolicies = view.findViewById(R.id.terms_and_policy_layout);
 
         // Set logout button click listener
-        logLayout.setOnClickListener(v -> showLogoutConfirmationDialog());
-        langLayout.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), PassengerLanguage.class);
+        accountLayout.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), PassengerProfile.class);
             startActivity(intent);
         });
 
@@ -84,20 +76,41 @@ public class PassengerSettingsFragment extends Fragment {
             startActivity(intent);
         });
 
-        // Retrieve user data based on role
-        Bundle args = getArguments();
-        if (args != null) {
-            String email = args.getString(ARG_EMAIL);
-            String name = args.getString(ARG_NAME);
-            String profileUri = args.getString(ARG_PROFILE_URI);
+        langLayout.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), DriverLanguage.class);
+            startActivity(intent);
+        });
 
-            // Set user data to views
-            txtName.setText(name);
-            txtEmail.setText(email);
-            Glide.with(PassengerSettingsFragment.this).load(profileUri).into(imageProfile);
-        }
+        termsAndPolicies.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), TermsAndPolicies.class);
+            startActivity(intent);
+        });
+
+        logLayout.setOnClickListener(v -> showLogoutConfirmationDialog());
+
+        loadUserData();
 
         return view;
+    }
+
+    private void loadUserData() {
+        if (user != null) {
+            String userId = user.getUid();
+            db.collection("users").document(userId).get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            String name = documentSnapshot.getString("name");
+                            String email = documentSnapshot.getString("email");
+                            String profileImageUrl = documentSnapshot.getString("profileImage");
+
+                            // Set user data to views
+                            txtName.setText(name);
+                            txtEmail.setText(email);
+                            Glide.with(PassengerSettingsFragment.this).load(profileImageUrl).into(imageProfile);
+                        }
+                    })
+                    .addOnFailureListener(e -> Log.e("DriverSettingsFragment", "Failed to fetch user data: ", e));
+        }
     }
 
     private void showLogoutConfirmationDialog() {
@@ -115,7 +128,7 @@ public class PassengerSettingsFragment extends Fragment {
         editor.putString("isLoggedIn", ""); // Assuming you are tracking the login state with "isLoggedIn"
         editor.apply();
 
-        FirebaseAuth.getInstance().signOut();
+        mAuth.signOut();
         // Navigate back to the login screen
         Intent intent = new Intent(getActivity(), LoginPassenger.class);
         startActivity(intent);

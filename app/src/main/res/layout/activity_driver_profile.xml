@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context=".driver.ui.DriverProfile">
+
+        <!-- Toolbar -->
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:elevation="4dp">
+
+            <ImageButton
+                android:id="@+id/btn_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_back_arrow"
+                android:background="@drawable/ripple_effect_icon"
+                app:tint="@color/white"
+                android:tooltipText="back"
+                android:layout_marginRight="10dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/profile_title"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <ImageButton
+                android:id="@+id/btn_go_to_edit_profile_driver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_edit"
+                android:background="@drawable/ripple_effect_icon"
+                android:layout_gravity="end"
+                android:layout_marginRight="16dp"
+                android:tooltipText="Edit Profile Details"
+                app:tint="@color/white"/>
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <!-- Avatar -->
+        <LinearLayout
+            android:id="@+id/main_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@color/primary_dark"
+            android:paddingBottom="10dp">
+
+            <!-- Container for avatar and edit icon -->
+            <RelativeLayout
+                android:id="@+id/image_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                >
+
+                <!-- Profile Image -->
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/avatar"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="70dp"
+                    android:padding="8dp" />
+
+                <!-- Edit Icon -->
+                <ImageButton
+                    android:id="@+id/btn_change_profile_image_driver"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_edit_profile"
+                    android:background="@drawable/ripple_effect_icon"
+                    android:layout_alignBottom="@id/avatar"
+                    android:layout_alignEnd="@id/avatar"
+                    android:layout_marginEnd="-5dp"
+                    android:layout_marginBottom="-5dp"
+                    android:tooltipText="Edit Profile Picture"/>
+
+
+                <!-- Loading Indicator -->
+                <ProgressBar
+                    android:id="@+id/loadingIndicator"
+                    android:layout_centerHorizontal="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="visible"
+                    android:layout_marginTop="70dp"
+                    android:indeterminateTint="@color/primary_light"
+                    />
+            </RelativeLayout>
+
+            <!-- Name -->
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_below="@id/avatar"
+                android:layout_marginTop="10dp" />
+
+            <!-- Role -->
+            <TextView
+                android:id="@+id/role"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/secondary_text"
+                android:textSize="14sp"
+                android:layout_below="@id/name"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/overview_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="6dp"
+            android:layout_marginTop="24dp"
+            android:layout_below="@id/main_profile"
+            >
+
+            <TextView
+                android:id="@+id/overview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/overview"
+                android:layout_marginStart="8dp"
+                android:textColor="@color/primary_text"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                />
+
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:id="@+id/status_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="15dp"
+            android:background="@drawable/ripple_effect_button"
+            android:layout_below="@id/overview_layout"
+            >
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/status_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/status"
+                    android:layout_marginStart="8dp"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="12sp"
+                    />
+
+                <TextView
+                    android:id="@+id/status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:textColor="@color/primary_text"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/status_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_status"
+                android:layout_marginRight="16dp"
+                app:tint="@color/primary"/>
+
+        </LinearLayout>
+
+        <!-- Email Field -->
+        <LinearLayout
+            android:id="@+id/email_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="15dp"
+            android:layout_below="@id/status_layout"
+            android:background="@drawable/ripple_effect_button"
+            >
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/email_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/email"
+                    android:layout_marginStart="8dp"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="12sp"
+                    />
+
+                <TextView
+                    android:id="@+id/email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:textColor="@color/primary_text"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/email_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_email2"
+                android:layout_marginRight="16dp"
+                app:tint="@color/primary"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/phone_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="15dp"
+            android:layout_below="@id/email_layout"
+            android:background="@drawable/ripple_effect_button"
+            >
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/phone_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/phone"
+                    android:layout_marginStart="8dp"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="12sp"
+                    />
+
+                <TextView
+                    android:id="@+id/phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:textColor="@color/primary_text"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/phone_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_phone"
+                android:layout_marginRight="16dp"
+                app:tint="@color/primary"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tricycle_number_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="15dp"
+            android:layout_below="@id/phone_layout"
+            android:background="@drawable/ripple_effect_button"
+            >
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/tricycle_number_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tricycle_number"
+                    android:layout_marginStart="8dp"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="12sp"
+                    />
+
+                <TextView
+                    android:id="@+id/tricycle_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:textColor="@color/primary_text"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/tricycle_number_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_tricycle2"
+                android:layout_marginRight="16dp"
+                app:tint="@color/primary"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/barangay_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="15dp"
+            android:layout_below="@id/tricycle_number_layout"
+            android:background="@drawable/ripple_effect_button"
+            >
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/barangay_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/registered_barangay"
+                    android:layout_marginStart="8dp"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="12sp"
+                    />
+
+                <TextView
+                    android:id="@+id/barangay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:textColor="@color/primary_text"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/barangay_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_place"
+                android:layout_marginRight="16dp"
+                app:tint="@color/primary"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/plate_number_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:padding="15dp"
+            android:layout_below="@id/barangay_layout"
+            android:background="@drawable/ripple_effect_button"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/plate_number_label"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/plate_number"
+                    android:layout_marginStart="8dp"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="12sp"
+                    android:layout_weight="1"
+                    />
+
+                <ImageButton
+                    android:id="@+id/change_plate_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_edit"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/ripple_effect_icon"
+                    android:tooltipText="Edit Plate Number"
+                    />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/plate_number"
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:layout_marginStart="8dp"
+                android:textSize="16sp"
+                android:layout_gravity="center"/>
+
+            <!-- Loading Indicator -->
+            <ProgressBar
+                android:id="@+id/loadingIndicatorPlateNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="visible"
+                android:indeterminateTint="@color/primary_light"
+                />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</ScrollView>

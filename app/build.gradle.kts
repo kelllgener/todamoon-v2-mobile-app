@@ -54,10 +54,15 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:21.1.0")
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-storage:20.2.0")
+    implementation("com.google.firebase:firebase-auth:21.0.1")
+
 
     //Glide
     implementation("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
+
+    implementation("com.facebook.shimmer:shimmer:0.5.0")
+
 
     // Circle Image
     implementation("de.hdodenhof:circleimageview:3.1.0")

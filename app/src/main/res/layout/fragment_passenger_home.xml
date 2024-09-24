@@ -32,7 +32,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/tricycle_queue_fragment_title"
                     android:textColor="@color/primary_text"
-                    android:textSize="16sp"
+                    android:textSize="20sp"
                     android:textStyle="bold"
                     android:layout_gravity="center"/>
 
@@ -47,23 +47,23 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/lblCategory"
+            android:id="@+id/lbl_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:textColor="@color/secondary_text"
-            android:text="Barangay Lawa Terminal"
-            android:textSize="16sp" />
+            android:textColor="@color/primary_text"
+            android:text="@string/tricycle_queue_fragment_sub_title"
+            android:textSize="18sp" />
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="600dp"
-            android:layout_below="@+id/lblCategory"
+            android:layout_below="@+id/lbl_category"
             android:background="@drawable/category_bg">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:id="@+id/layoutPrinza"
